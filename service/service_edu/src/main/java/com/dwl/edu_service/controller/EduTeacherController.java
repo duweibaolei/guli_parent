@@ -45,7 +45,7 @@ public class EduTeacherController {
     /**
      * 带参构造方法
      *
-     * @param eduTeacherService
+     * @param eduTeacherService 讲师 服务类
      */
     @Autowired
     public EduTeacherController(EduTeacherService eduTeacherService) {
@@ -55,7 +55,7 @@ public class EduTeacherController {
     /**
      * 查询讲师表所有数据
      *
-     * @return
+     * @return R
      */
     @ApiOperation(value = "所有讲师列表")
     @GetMapping("/findAll")
@@ -69,7 +69,7 @@ public class EduTeacherController {
      *
      * @param current 当前页
      * @param limit   每页记录数
-     * @return
+     * @return R
      */
     @ApiOperation(value = "分页讲师列表")
     @GetMapping("/pageTeacher/{current}/{limit}")
@@ -79,15 +79,8 @@ public class EduTeacherController {
         // 创建 page 对象
         Page<EduTeacher> pageTeacher = new Page<>(current, limit);
 
-//        try {
-//            int i = 10/0;
-//        }catch(Exception e) {
-//            //执行自定义异常
-//            throw new GuliException(20001,"执行了自定义异常处理....");
-//        }
-
-        //调用方法实现分页
-        //调用方法时候，底层封装，把分页所有数据封装到pageTeacher对象里面
+        /* 调用方法实现分页
+         * 调用方法时候，底层封装，把分页所有数据封装到pageTeacher对象里面 */
         eduTeacherService.page(pageTeacher, null);
 
         long total = pageTeacher.getTotal();//总记录数
@@ -103,14 +96,14 @@ public class EduTeacherController {
      * @param current      当前页
      * @param limit        每页记录数
      * @param teacherQuery 查询条件封装类
-     * @return
+     * @return R
      */
     @ApiOperation(value = "条件查询带分页的方法")
     @PostMapping("/pageTeacherCondition/{current}/{limit}")
     public R pageTeacherCondition(
             @ApiParam(name = "page", value = "当前页", required = true) @PathVariable Long current,
             @ApiParam(name = "limit", value = "每页记录数", required = true) @PathVariable long limit,
-            @ApiParam(name = "teacherQuery", value = "查询条件", required = false) @RequestBody(required = false) TeacherQuery teacherQuery) {
+            @ApiParam(name = "teacherQuery", value = "查询条件") @RequestBody(required = false) TeacherQuery teacherQuery) {
 
         // 创建page对象
         Page<EduTeacher> pageTeacher = new Page<>(current, limit);
@@ -149,7 +142,7 @@ public class EduTeacherController {
     /**
      * 逻辑删除讲师的方法
      *
-     * @param id
+     * @param id 讲师 id
      * @return 成功还是失败
      */
     @ApiOperation(value = "根据ID删除讲师")
@@ -166,8 +159,8 @@ public class EduTeacherController {
     /**
      * 添加讲师接口的方法
      *
-     * @param eduTeacher
-     * @return
+     * @param eduTeacher 讲师实体类
+     * @return R
      */
     @ApiOperation(value = "添加讲师接口的方法")
     @PostMapping("/addTeacher")
@@ -181,23 +174,10 @@ public class EduTeacherController {
     }
 
     /**
-     * 根据讲师id进行查询
-     *
-     * @param id
-     * @return
-     */
-    @ApiOperation(value = "根据讲师id进行查询")
-    @GetMapping("/getTeacher/{id}")
-    public R getTeacher(@PathVariable String id) {
-        EduTeacher eduTeacher = eduTeacherService.getById(id);
-        return R.ok().data("teacher", eduTeacher);
-    }
-
-    /**
      * 讲师修改功能
      *
-     * @param eduTeacher
-     * @return
+     * @param eduTeacher 讲师实体类
+     * @return R
      */
     @ApiOperation(value = "讲师修改功能")
     @PostMapping("/updateTeacher")
@@ -209,6 +189,5 @@ public class EduTeacherController {
             return R.error();
         }
     }
-
 }
 
