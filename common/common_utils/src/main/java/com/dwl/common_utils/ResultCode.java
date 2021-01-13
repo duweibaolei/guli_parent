@@ -1,14 +1,25 @@
 package com.dwl.common_utils;
 
-public interface ResultCode {
+/**
+ * 定义统一返回码类
+ */
+public enum ResultCode {
 
-    /**
-     * 成功
-     */
-    Integer SUCCESS = 20000;
+    SUCCESS(20000), // 成功
+    ERROR(50000), // 失败
+    FILE_UPLOAD_ERROR(60000);
 
-    /**
-     * 失败
-     */
-    Integer ERROR = 2000;
+    private Integer status;
+
+    ResultCode(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 }

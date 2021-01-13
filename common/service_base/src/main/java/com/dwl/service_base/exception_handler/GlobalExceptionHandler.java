@@ -1,6 +1,6 @@
 package com.dwl.service_base.exception_handler;
 
-import com.dwl.common_utils.R;
+import com.dwl.common_utils.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,9 +15,9 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     @ResponseBody // 为了返回数据
-    public R error(Exception e) {
+    public Result error(Exception e) {
         e.printStackTrace();
-        return R.error().message("执行了全局异常处理..");
+        return Result.error().message("执行了全局异常处理..");
     }
 
     /**
@@ -25,9 +25,9 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ArithmeticException.class)
     @ResponseBody
-    public R error(ArithmeticException e) {
+    public Result error(ArithmeticException e) {
         e.printStackTrace();
-        return R.error().message("执行了 ArithmeticException 异常处理..");
+        return Result.error().message("执行了 ArithmeticException 异常处理..");
     }
 
     /**
@@ -35,9 +35,9 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(GuLiException.class)
     @ResponseBody
-    public R error(GuLiException e) {
+    public Result error(GuLiException e) {
         log.error(e.getMessage());
         e.printStackTrace();
-        return R.error().code(e.getCode()).message(e.getMsg());
+        return Result.error().code(e.getCode()).message(e.getMsg());
     }
 }
