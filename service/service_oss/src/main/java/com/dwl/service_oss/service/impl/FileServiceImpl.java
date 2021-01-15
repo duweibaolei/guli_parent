@@ -35,7 +35,7 @@ public class FileServiceImpl implements FileService {
 
         // 按照日期进行分组
         String dateTime = new DateTime().toString("yyyy-MM-dd");
-        bucketName = bucketName + "-" + dateTime;
+        String fileName = "head_portrait" + "/" + dateTime + "/" + UUID.randomUUID().toString();
 
         // 通过账户来创建oss
         OSS client = new OSSClientBuilder().build(endPoint, keyId, keySecret);
@@ -53,8 +53,6 @@ public class FileServiceImpl implements FileService {
 
             // 原来的文件名称
             String original = file.getOriginalFilename();
-            // 获取 UUID
-            String fileName = UUID.randomUUID().toString();
             // 获取文件类型
             String fileType = original.substring(original.lastIndexOf("."));
             // 新的文件名称
@@ -67,7 +65,7 @@ public class FileServiceImpl implements FileService {
             uploadUrl = "http://" + bucketName + "." + endPoint + "/" + newFileName;
         } catch (IOException e) {
             LOGGER.error("讲师头像上传异常，文件名称：{}" + file.getOriginalFilename() + "异常信息：{}" + e.getMessage());
-            throw new GuLiException(ResultCode.FILE_UPLOAD_ERROR.getStatus(),e.getMessage());
+            throw new GuLiException(ResultCode.FILE_UPLOAD_ERROR.getStatus(), e.getMessage());
         }
         return uploadUrl;
     }

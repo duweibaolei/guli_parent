@@ -37,7 +37,7 @@ public class ConstantPropertiesUtil implements InitializingBean {
     public static String BUCKET_NAME;
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         END_POINT = this.endPoint;
         KEY_ID = this.keyId;
         KEY_SECRET = this.keySecret;

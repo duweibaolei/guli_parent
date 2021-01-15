@@ -1,7 +1,11 @@
 package com.dwl.service_edu.service;
 
-import com.dwl.service_edu.entity.EduSubject;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.dwl.service_edu.entity.EduSubject;
+import com.dwl.service_edu.entity.vo.SubjectNestedVo;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,18 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface EduSubjectService extends IService<EduSubject> {
 
+    /**
+     * Excel批量导入
+     *
+     * @param file
+     * @param eduSubjectService
+     */
+    void importSubjectData(MultipartFile file, EduSubjectService eduSubjectService);
+
+    /**
+     * 嵌套数据列表
+     *
+     * @return
+     */
+    List<SubjectNestedVo> nestedList();
 }
