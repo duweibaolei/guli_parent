@@ -5,7 +5,7 @@ import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.model.CannedAccessControlList;
 import com.dwl.common_utils.ResultCode;
 import com.dwl.service_base.exception_handler.GuLiException;
-import com.dwl.service_oss.OssUtil.ConstantPropertiesUtil;
+import com.dwl.service_oss.ossUtil.ConstantPropertiesUtil;
 import com.dwl.service_oss.service.FileService;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -24,7 +24,7 @@ public class FileServiceImpl implements FileService {
 
 
     @Override
-    public String upload(MultipartFile file) {
+    public String upload(MultipartFile file, String host) {
 
         // 定义链接oss的链接属性
         String endPoint = ConstantPropertiesUtil.END_POINT;
@@ -35,7 +35,7 @@ public class FileServiceImpl implements FileService {
 
         // 按照日期进行分组
         String dateTime = new DateTime().toString("yyyy-MM-dd");
-        String fileName = "head_portrait" + "/" + dateTime + "/" + UUID.randomUUID().toString();
+        String fileName = host + "/" + dateTime + "/" + UUID.randomUUID().toString();
 
         // 通过账户来创建oss
         OSS client = new OSSClientBuilder().build(endPoint, keyId, keySecret);

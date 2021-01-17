@@ -6,6 +6,9 @@ import com.dwl.service_edu.entity.vo.SubjectNestedVo;
 import com.dwl.service_edu.service.EduSubjectService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +29,14 @@ import java.util.List;
 @RequestMapping("/eduService/eduSubject")
 public class EduSubjectController {
 
+    /**
+     * 日志信息
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(EduSubjectController.class);
+
+    /**
+     * 课程科目服务类
+     */
     private EduSubjectService eduSubjectService;
 
     /**
@@ -47,26 +58,39 @@ public class EduSubjectController {
     /**
      * 添加课程分类
      *
-     * @param file
-     * @return
+     * @param file excel文件
+     * @return Result
      */
     @ApiOperation(value = "Excel批量导入")
     @PostMapping("/addSubject")
-    public Result addSubject(MultipartFile file) {
+    public Result addSubject(
+            @ApiParam(name = "file", value = "spring的文件上传类", required = true)
+                    MultipartFile file) {
         try {
             eduSubjectService.importSubjectData(file, eduSubjectService);
             return Result.ok();
         } catch (Exception e) {
+            LOGGER.error("添加课程分类异常：{}", e.getMessage());
             return Result.error().data("错误信息：", e.getMessage());
         }
     }
 
-    @ApiOperation(value = "嵌套数据列表")
+    /**
+     * 获取课程分类列表（树形）信息
+     *
+     * @return Result
+     */
+    @ApiOperation(value = "课程分类列表（树形）")
     @GetMapping("/nestedList")
-    public Result nestedList(){
-        List<SubjectNestedVo> subjectNestedVoList = eduSubjectService.nestedList();
-
-        return Result.ok().data("items", subjectNestedVoList);
+    public Result nestedList() {
+        try {
+            List<SubjectNestedVo> subjectNestedVoList = eduSubjectService.nestedList();
+            return Result.ok().data("items", subjectNestedVoList);
+        } catch (Exception e) {
+            LOGGER.error("获取课程分类列表（树形）信息异常：{}", e.getMessage());
+            return Result.error().data("获取课程异常！", e.getMessage());
+        }
     }
+
 }
 

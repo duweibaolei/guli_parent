@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 /**
@@ -62,6 +63,5 @@ public class EduTeacher implements Serializable {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     @ApiModelProperty(value = "更新时间")
     private Date gmtModified;
-
 
 }

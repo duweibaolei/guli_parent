@@ -1,4 +1,4 @@
-package com.dwl.service_oss.OssUtil;
+package com.dwl.service_oss.ossUtil;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;

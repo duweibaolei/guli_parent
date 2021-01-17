@@ -7,8 +7,9 @@ public interface FileService {
     /**
      * 文件上传至阿里云
      * @param file
+     * @param host
      * @return
      */
-    String upload(MultipartFile file);
+    String upload(MultipartFile file, String host);
 
 }

@@ -11,6 +11,8 @@ import com.dwl.service_edu.service.EduTeacherService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +33,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/eduService/eduTeacher")
 public class EduTeacherController {
+
+    /**
+     * 日志信息
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(EduTeacherController.class);
 
     /**
      * 讲师服务类
@@ -60,8 +67,12 @@ public class EduTeacherController {
      */
     @ApiOperation(value = "所有讲师列表")
     @GetMapping("/findAll")
-    public Result findAllTeacher() {
-        List<EduTeacher> list = eduTeacherService.list(null);
+    public Result findAllTeacher(@ApiParam(name = "id", value = "讲师id") String id) {
+        QueryWrapper<EduTeacher> wrapper = new QueryWrapper<>();
+        if (StringUtil.isNotEmpty(id)) {
+            wrapper.eq("id", id);
+        }
+        List<EduTeacher> list = eduTeacherService.list(wrapper);
         return Result.ok().data("items", list);
     }
 
@@ -156,6 +167,7 @@ public class EduTeacherController {
                 return Result.ok().data("teacher", eduTeacher);
             }
         }
+        LOGGER.error("根据讲师ID查询数据信息异常，讲师ID：{}", id);
         return Result.error().message("讲师id为空，请检查数据是否正常！");
     }
 
@@ -172,6 +184,7 @@ public class EduTeacherController {
         if (flag) {
             return Result.ok();
         } else {
+            LOGGER.error("逻辑删除讲师信息异常，讲师ID：{}", id);
             return Result.error();
         }
     }
@@ -189,6 +202,7 @@ public class EduTeacherController {
         if (save) {
             return Result.ok();
         } else {
+            LOGGER.error("添加讲师信息异常，讲师ID：{}：", eduTeacher.getId());
             return Result.error();
         }
     }
@@ -199,13 +213,13 @@ public class EduTeacherController {
      * @param eduTeacher 讲师实体类
      * @return Result
      */
-    @ApiOperation(value = "讲师修改功能")
     @PostMapping("/updateTeacher")
     public Result updateTeacher(@RequestBody EduTeacher eduTeacher) {
         boolean flag = eduTeacherService.updateById(eduTeacher);
         if (flag) {
             return Result.ok();
         } else {
+            LOGGER.error("讲师修改信息异常，讲师ID：{}：", eduTeacher.getId());
             return Result.error();
         }
     }
