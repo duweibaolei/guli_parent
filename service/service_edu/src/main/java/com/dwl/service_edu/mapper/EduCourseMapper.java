@@ -1,7 +1,8 @@
 package com.dwl.service_edu.mapper;
 
-import com.dwl.service_edu.entity.EduCourse;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.dwl.service_edu.entity.EduCourse;
+import com.dwl.service_edu.entity.vo.CoursePublishVo;
 
 /**
  * <p>
@@ -13,4 +14,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface EduCourseMapper extends BaseMapper<EduCourse> {
 
+    /**
+     * 选择课程发布
+     *
+     * @param courseId
+     * @return
+     */
+    CoursePublishVo selectCoursePublishVoById(String courseId);
 }

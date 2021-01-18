@@ -71,7 +71,7 @@ public class EduSubjectController {
             return Result.ok();
         } catch (Exception e) {
             LOGGER.error("添加课程分类异常：{}", e.getMessage());
-            return Result.error().data("错误信息：", e.getMessage());
+            return Result.error().message("错误信息：" + e.getMessage());
         }
     }
 
@@ -88,7 +88,7 @@ public class EduSubjectController {
             return Result.ok().data("items", subjectNestedVoList);
         } catch (Exception e) {
             LOGGER.error("获取课程分类列表（树形）信息异常：{}", e.getMessage());
-            return Result.error().data("获取课程异常！", e.getMessage());
+            return Result.error().message("获取课程异常 :" + e.getMessage());
         }
     }
 

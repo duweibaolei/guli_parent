@@ -4,12 +4,16 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * 讲师查询对象封装
  */
 @ApiModel(value = "Teacher查询对象", description = "讲师查询对象封装")
 @Data
-public class TeacherQuery {
+public class TeacherQuery implements Serializable {
+
+    private static final long serialVersionUID = 866147609729009746L;
 
     @ApiModelProperty(value = "教师名称,模糊查询")
     private String name;

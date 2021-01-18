@@ -3,6 +3,7 @@ package com.dwl.service_edu.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.dwl.service_edu.entity.EduCourse;
 import com.dwl.service_edu.entity.vo.CourseInfoVo;
+import com.dwl.service_edu.entity.vo.CoursePublishVo;
 
 /**
  * <p>
@@ -28,4 +29,20 @@ public interface EduCourseService extends IService<EduCourse> {
      * @return
      */
     CourseInfoVo getCourseInfo(String id);
+
+    /**
+     * 选择课程发布
+     *
+     * @param id
+     * @return
+     */
+    CoursePublishVo getCoursePublishVoById(String id);
+
+    /**
+     * 根据id发布课程
+     *
+     * @param id
+     * @return
+     */
+    boolean publishCourseById(String id);
 }

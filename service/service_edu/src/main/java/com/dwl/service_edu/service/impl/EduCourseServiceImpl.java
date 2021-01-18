@@ -9,6 +9,7 @@ import com.dwl.service_edu.config.EduCommonStatus;
 import com.dwl.service_edu.entity.EduCourse;
 import com.dwl.service_edu.entity.EduCourseDescription;
 import com.dwl.service_edu.entity.vo.CourseInfoVo;
+import com.dwl.service_edu.entity.vo.CoursePublishVo;
 import com.dwl.service_edu.mapper.EduCourseMapper;
 import com.dwl.service_edu.service.EduCourseDescriptionService;
 import com.dwl.service_edu.service.EduCourseService;
@@ -127,5 +128,31 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
         }
         BeanUtils.copyProperties(description, infoVo);
         return infoVo;
+    }
+
+    /**
+     * 选择课程发布
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public CoursePublishVo getCoursePublishVoById(String id) {
+        return baseMapper.selectCoursePublishVoById(id);
+    }
+
+    /**
+     * 根据id发布课程
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public boolean publishCourseById(String id) {
+        EduCourse course = new EduCourse();
+        course.setId(id);
+        course.setStatus(EduCommonStatus.COURSE_NORMAL);
+        Integer count = baseMapper.updateById(course);
+        return null != count && count > 0;
     }
 }

@@ -12,32 +12,32 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 课程收藏
+ * 课程
  * </p>
  *
  * @author dwl
- * @since 2021-01-15
+ * @since 2021-01-18
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="EduCourseCollect对象", description="课程收藏")
-public class EduCourseCollect implements Serializable {
+@ApiModel(value="EduChapter对象", description="课程")
+public class EduChapter implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "收藏ID")
-    @TableId(value = "id", type = IdType.ID_WORKER)
+    @ApiModelProperty(value = "章节ID")
+    @TableId(value = "id", type = IdType.UUID)
     private String id;
 
-    @ApiModelProperty(value = "课程讲师ID")
+    @ApiModelProperty(value = "课程ID")
     private String courseId;
 
-    @ApiModelProperty(value = "课程专业ID")
-    private String memberId;
+    @ApiModelProperty(value = "章节名称")
+    private String title;
 
-    @ApiModelProperty(value = "逻辑删除 1（true）已删除， 0（false）未删除")
-    private Integer isDeleted;
+    @ApiModelProperty(value = "显示排序")
+    private Integer sort;
 
     @ApiModelProperty(value = "创建时间")
     private Date gmtCreate;

@@ -5,12 +5,13 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 用于获取课程分类的第一层信息的数据
+ * 课程章节的第二层信息实体类
  */
 @Data
-public class SubjectVo implements Serializable {
+public class ChapterVo implements Serializable {
 
-    private static final long serialVersionUID = 5425831067194951093L;
+    private static final long serialVersionUID = 5898508231209401219L;
+
     /**
      * id
      */
@@ -20,4 +21,5 @@ public class SubjectVo implements Serializable {
      * 标题名称
      */
     private String title;
+
 }

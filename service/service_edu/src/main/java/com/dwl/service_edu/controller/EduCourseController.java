@@ -5,6 +5,7 @@ import com.dwl.common_utils.BeanUtil;
 import com.dwl.common_utils.Result;
 import com.dwl.common_utils.StringUtil;
 import com.dwl.service_edu.entity.vo.CourseInfoVo;
+import com.dwl.service_edu.entity.vo.CoursePublishVo;
 import com.dwl.service_edu.service.EduCourseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -89,6 +90,36 @@ public class EduCourseController {
             LOGGER.error("课程的ID为：{}，课程的基本信息异常：{}", id, e.getMessage());
             return Result.error().message("获取课程的基本信息异常：" + e.getMessage());
         }
+    }
+
+    /**
+     * 根据ID获取课程发布信息
+     *
+     * @param id
+     * @return
+     */
+    @ApiOperation(value = "根据ID获取课程发布信息")
+    @GetMapping("coursePublishInfo/{id}")
+    public Result getCoursePublishVoById(
+            @ApiParam(name = "id", value = "课程ID", required = true)
+            @PathVariable String id) {
+        CoursePublishVo courseInfoForm = eduCourseService.getCoursePublishVoById(id);
+        return Result.ok().data("item", courseInfoForm);
+    }
+
+    /**
+     * 根据id发布课程
+     *
+     * @param id
+     * @return
+     */
+    @ApiOperation(value = "根据id发布课程")
+    @PutMapping("publish-course/{id}")
+    public Result publishCourseById(
+            @ApiParam(name = "id", value = "课程ID", required = true)
+            @PathVariable String id) {
+        eduCourseService.publishCourseById(id);
+        return Result.ok();
     }
 }
 
