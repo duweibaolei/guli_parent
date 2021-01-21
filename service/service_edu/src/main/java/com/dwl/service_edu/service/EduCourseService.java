@@ -1,6 +1,8 @@
 package com.dwl.service_edu.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.dwl.service_edu.entity.CourseQuery;
 import com.dwl.service_edu.entity.EduCourse;
 import com.dwl.service_edu.entity.vo.CourseInfoVo;
 import com.dwl.service_edu.entity.vo.CoursePublishVo;
@@ -45,4 +47,19 @@ public interface EduCourseService extends IService<EduCourse> {
      * @return
      */
     boolean publishCourseById(String id);
+
+    /**
+     * 课程列表分页查询
+     *
+     * @param courseQuery
+     * @param queryPage
+     */
+    void courseQueryPage(CourseQuery courseQuery, Page<EduCourse> queryPage);
+
+    /**
+     * 根据ID删除课程
+     *
+     * @param id
+     */
+    void removeCourseById(String id);
 }

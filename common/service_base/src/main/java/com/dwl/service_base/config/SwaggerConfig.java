@@ -1,4 +1,4 @@
-package com.dwl.service_base;
+package com.dwl.service_base.config;
 
 import com.google.common.base.Predicates;
 import org.springframework.context.annotation.Bean;

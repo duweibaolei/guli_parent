@@ -10,7 +10,8 @@ public enum ResultCode {
     FILE_UPLOAD_ERROR(50001), // 文件上传异常
     QUERY_ERROR(50002), // 查询异常
     SAVE_ERROR(50003), // 保存异常
-    UPDATA_ERROR(50004); // 更新异常
+    UPDATA_ERROR(50004), // 更新异常
+    DELETED_ERROR(50005); // 删除异常
 
     private Integer status;
 

@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Api("阿里云文件管理")
 @CrossOrigin // 跨域
 @RestController
-@RequestMapping("/admin/oss/file")
+@RequestMapping("oss/file")
 public class FileController {
 
     private FileService fileService;

@@ -9,6 +9,8 @@ import com.dwl.service_edu.entity.EduVideo;
 import com.dwl.service_edu.entity.VideoInfoForm;
 import com.dwl.service_edu.mapper.EduVideoMapper;
 import com.dwl.service_edu.service.EduVideoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class EduVideoServiceImpl extends ServiceImpl<EduVideoMapper, EduVideo> implements EduVideoService {
+
+    /**
+     * 日志信息
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(EduVideoServiceImpl.class);
 
     /**
      * 根据课程id删除课时信息
@@ -98,5 +105,17 @@ public class EduVideoServiceImpl extends ServiceImpl<EduVideoMapper, EduVideo> i
         //删除视频资源 TODO
         Integer result = baseMapper.deleteById(id);
         return null != result && result > 0;
+    }
+
+    /**
+     * 根据courseId删除课时业务方法
+     *
+     * @param courseId
+     */
+    @Override
+    public void removeByCourseId(String courseId) {
+        QueryWrapper<EduVideo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("course_id", courseId);
+        baseMapper.delete(queryWrapper);
     }
 }

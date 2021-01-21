@@ -1,5 +1,6 @@
 package com.dwl.service_edu.entity.vo;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -21,5 +22,14 @@ public class ChapterVo implements Serializable {
      * 标题名称
      */
     private String title;
+
+    /**
+     * 是否免费
+     */
+    private Integer isFree;
+
+
+    @ApiModelProperty(value = "云服务器上存储的视频文件名称")
+    private String videoOriginalName;
 
 }

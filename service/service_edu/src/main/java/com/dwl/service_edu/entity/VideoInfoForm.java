@@ -34,5 +34,8 @@ public class VideoInfoForm implements Serializable {
     private Integer sort;
 
     @ApiModelProperty(value = "是否可以试听：0默认 1免费")
-    private Boolean free;
+    private Integer isFree;
+
+    @ApiModelProperty(value = "原始文件名称")
+    private String videoOriginalName;
 }

@@ -1,9 +1,12 @@
 package com.dwl.service_edu.controller;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dwl.common_utils.BeanUtil;
 import com.dwl.common_utils.Result;
 import com.dwl.common_utils.StringUtil;
+import com.dwl.service_edu.entity.CourseQuery;
+import com.dwl.service_edu.entity.EduCourse;
 import com.dwl.service_edu.entity.vo.CourseInfoVo;
 import com.dwl.service_edu.entity.vo.CoursePublishVo;
 import com.dwl.service_edu.service.EduCourseService;
@@ -14,6 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * <p>
@@ -114,12 +119,61 @@ public class EduCourseController {
      * @return
      */
     @ApiOperation(value = "根据id发布课程")
-    @PutMapping("publish-course/{id}")
+    @PutMapping("publishCourse/{id}")
     public Result publishCourseById(
             @ApiParam(name = "id", value = "课程ID", required = true)
             @PathVariable String id) {
         eduCourseService.publishCourseById(id);
         return Result.ok();
+    }
+
+    /**
+     * 课程列表分页查询
+     *
+     * @param page
+     * @param limit
+     * @param courseQuery
+     * @return
+     */
+    @ApiOperation(value = "课程列表分页查询")
+    @PostMapping("/queryCoursePage/{page}/{limit}")
+    public Result coursePageQuery(
+            @ApiParam(name = "page", value = "当前页", required = true) @PathVariable long page,
+            @ApiParam(name = "limit", value = "每页记录数", required = true) @PathVariable long limit,
+            @ApiParam(name = "course", value = "课程列表查询实体类") @RequestBody CourseQuery courseQuery) {
+        // 创建page对象
+        Page<EduCourse> queryPage = new Page<>(page, limit);
+        try {
+            /* 调用方法实现分页
+             * 调用方法时候，底层封装，把分页所有数据封装到pageTeacher对象里面 */
+            eduCourseService.courseQueryPage(courseQuery, queryPage);
+            long total = queryPage.getTotal();//总记录数
+            List<EduCourse> coursePage = queryPage.getRecords(); //数据list集合
+            return Result.ok().data("total", total).data("coursePage", coursePage);
+        } catch (Exception e) {
+            LOGGER.error("课程类别分页查询异常：{}", e.getMessage());
+            return Result.error().message("课程类别分页查询异常：{}" + e.getMessage());
+        }
+    }
+
+    /**
+     * 根据ID删除课程
+     *
+     * @param id
+     * @return
+     */
+    @ApiOperation(value = "根据ID删除课程")
+    @DeleteMapping("/removeCourseById/{id}")
+    public Result removeById(
+            @ApiParam(name = "id", value = "课程ID", required = true)
+            @PathVariable String id) {
+        try {
+            eduCourseService.removeCourseById(id);
+            return Result.ok();
+        } catch (Exception e) {
+            LOGGER.error("根据id:{} 删除课程异常：{}", id, e);
+            return Result.error().message("删除课程失败：" + e);
+        }
     }
 }
 

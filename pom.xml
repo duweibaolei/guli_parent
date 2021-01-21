@@ -203,25 +203,39 @@
                 <version>${fastjson.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.alibaba.otter</groupId>
+                <artifactId>canal.client</artifactId>
+                <version>${canal.client.version}</version>
+            </dependency>
+            <!-- json -->
+            <dependency>
                 <groupId>org.json</groupId>
                 <artifactId>json</artifactId>
                 <version>${json.version}</version>
             </dependency>
-
+            <!-- commons -->
             <dependency>
                 <groupId>commons-dbutils</groupId>
                 <artifactId>commons-dbutils</artifactId>
                 <version>${commons-dbutils.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.alibaba.otter</groupId>
-                <artifactId>canal.client</artifactId>
-                <version>${canal.client.version}</version>
-            </dependency>
-
         </dependencies>
     </dependencyManagement>
+
+    <repositories>
+        <repository>
+            <id>sonatype-nexus-staging</id>
+            <name>Sonatype Nexus Staging</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>

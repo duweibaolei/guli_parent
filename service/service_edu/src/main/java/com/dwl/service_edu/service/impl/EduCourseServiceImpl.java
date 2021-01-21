@@ -1,18 +1,23 @@
 package com.dwl.service_edu.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dwl.common_utils.BeanUtil;
 import com.dwl.common_utils.ResultCode;
 import com.dwl.common_utils.StringUtil;
 import com.dwl.service_base.exception_handler.GuLiException;
 import com.dwl.service_edu.config.EduCommonStatus;
+import com.dwl.service_edu.entity.CourseQuery;
 import com.dwl.service_edu.entity.EduCourse;
 import com.dwl.service_edu.entity.EduCourseDescription;
 import com.dwl.service_edu.entity.vo.CourseInfoVo;
 import com.dwl.service_edu.entity.vo.CoursePublishVo;
 import com.dwl.service_edu.mapper.EduCourseMapper;
+import com.dwl.service_edu.service.EduChapterService;
 import com.dwl.service_edu.service.EduCourseDescriptionService;
 import com.dwl.service_edu.service.EduCourseService;
+import com.dwl.service_edu.service.EduVideoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -40,13 +45,24 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
      * 课程简介服务类
      */
     private EduCourseDescriptionService descriptionService;
+    /**
+     * 课程课时服务类
+     */
+    private EduVideoService videoService;
+    /**
+     * 课程章节服务类
+     */
+    private EduChapterService chapterService;
 
     EduCourseServiceImpl() {
     }
 
     @Autowired
-    EduCourseServiceImpl(EduCourseDescriptionService descriptionService) {
+    EduCourseServiceImpl(EduCourseDescriptionService descriptionService, EduVideoService videoService,
+                         EduChapterService chapterService) {
         this.descriptionService = descriptionService;
+        this.videoService = videoService;
+        this.chapterService = chapterService;
     }
 
 
@@ -154,5 +170,58 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
         course.setStatus(EduCommonStatus.COURSE_NORMAL);
         Integer count = baseMapper.updateById(course);
         return null != count && count > 0;
+    }
+
+    /**
+     * 课程列表分页查询
+     *
+     * @param courseQuery
+     * @param queryPage
+     */
+    @Override
+    public void courseQueryPage(CourseQuery courseQuery, Page<EduCourse> queryPage) {
+        QueryWrapper<EduCourse> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("gmt_create");
+
+        // 没有查询内容则直接查询
+        if (BeanUtil.isEmpty(courseQuery)) {
+            baseMapper.selectPage(queryPage, queryWrapper);
+            return;
+        }
+        // 获取数据信息
+        String title = courseQuery.getTitle();
+        String teacherId = courseQuery.getTeacherId();
+        String subjectParentId = courseQuery.getSubjectParentId();
+        String subjectId = courseQuery.getSubjectId();
+        // 拼装数据信息
+        if (StringUtil.isNotEmpty(title)) {
+            queryWrapper.like("title", title);
+        }
+        if (StringUtil.isNotEmpty(teacherId)) {
+            queryWrapper.eq("teacher_id", teacherId);
+        }
+        if (StringUtil.isNotEmpty(subjectParentId)) {
+            queryWrapper.eq("subject_parent_id", subjectParentId);
+        }
+        if (StringUtil.isNotEmpty(subjectId)) {
+            queryWrapper.eq("subject_id", subjectId);
+        }
+        // 条件查询
+        baseMapper.selectPage(queryPage, queryWrapper);
+    }
+
+    /**
+     * 根据ID删除课程相关信息
+     *
+     * @param id
+     */
+    @Override
+    public void removeCourseById(String id) {
+        //根据id删除所有视频
+        videoService.removeByCourseId(id);
+        //根据id删除所有章节
+        chapterService.removeByCourseId(id);
+        // 最后删除课程
+        baseMapper.deleteById(id);
     }
 }

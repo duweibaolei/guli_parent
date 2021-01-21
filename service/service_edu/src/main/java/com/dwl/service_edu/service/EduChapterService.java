@@ -31,4 +31,12 @@ public interface EduChapterService extends IService<EduChapter> {
      * @return
      */
     boolean removeChapterById(String id);
+
+    /**
+     * 根据courseId删除章节业务方法
+     *
+     * @param courseId
+     */
+    void removeByCourseId(String courseId);
+
 }

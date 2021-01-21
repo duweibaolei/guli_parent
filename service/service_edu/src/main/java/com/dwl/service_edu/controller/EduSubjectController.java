@@ -1,6 +1,7 @@
 package com.dwl.service_edu.controller;
 
 
+import com.dwl.common_utils.BeanUtil;
 import com.dwl.common_utils.Result;
 import com.dwl.service_edu.entity.vo.SubjectNestedVo;
 import com.dwl.service_edu.service.EduSubjectService;
@@ -67,6 +68,9 @@ public class EduSubjectController {
             @ApiParam(name = "file", value = "spring的文件上传类", required = true)
                     MultipartFile file) {
         try {
+            if(BeanUtil.isEmpty(file)){
+                return Result.error().message("错误信息：文件为空！");
+            }
             eduSubjectService.importSubjectData(file, eduSubjectService);
             return Result.ok();
         } catch (Exception e) {
