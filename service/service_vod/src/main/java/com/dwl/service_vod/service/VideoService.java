@@ -4,47 +4,33 @@ import com.aliyuncs.exceptions.ClientException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
+/**
+ * 视频相关的服务类
+ */
 public interface VideoService {
 
     /**
-     * 视频文件上传
+     * 视频文件上传至阿里云服务器
      *
-     * @param file
-     * @return
+     * @param file 上传的文件
+     * @return 上传好的视频id
      */
     String uploadVideo(MultipartFile file) throws IOException;
 
     /**
      * 云端视频删除
      *
-     * @param videoId
+     * @param videoId 视频id
      */
     void removeVideo(String videoId) throws ClientException;
 
     /**
-     * 大文件上传初始化
+     * 删除全部的课时相关的视频
      *
-     * @param objectName
-     * @return
+     * @param videoIdList 视频id集合
      */
-    String initUpload(String objectName);
+    void removeVideoList(List<String> videoIdList);
 
-    /**
-     * 上传大文件的Chunk
-     *
-     * @param uploadId
-     * @param chunkId
-     * @param chunkFile
-     * @return
-     */
-    String uploadChunk(String uploadId, Integer chunkId, MultipartFile chunkFile);
-
-    /**
-     * 大文件上传完成后合并
-     *
-     * @param uploadId
-     * @return
-     */
-    String completeFile(String uploadId);
 }

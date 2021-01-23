@@ -1,5 +1,7 @@
 package com.dwl.service_vod.vodUtil;
 
+import com.aliyun.oss.event.ProgressEvent;
+import com.aliyun.oss.event.ProgressEventType;
 import com.aliyun.vod.upload.impl.UploadVideoImpl;
 import com.aliyun.vod.upload.req.UploadStreamRequest;
 import com.aliyun.vod.upload.resp.UploadStreamResponse;
@@ -50,7 +52,8 @@ public class AliyunVodSDKUtils {
      * @param uploadFileFrom
      * @param inputStream
      */
-    public static String uploadStream(UploadFileFrom uploadFileFrom, InputStream inputStream) {
+    public static String uploadStream(UploadFileFrom uploadFileFrom,
+                                      InputStream inputStream) {
         UploadStreamRequest request = new UploadStreamRequest(
                 uploadFileFrom.getAccessKeyId(), uploadFileFrom.getAccessKeySecret(),
                 uploadFileFrom.getTitle(), uploadFileFrom.getFileName(), inputStream);
@@ -98,7 +101,10 @@ public class AliyunVodSDKUtils {
         request.setPrintProgress(true);
 
         /* 设置自定义上传进度回调 (必须继承 VoDProgressListener) */
-        // request.setProgressListener(new PutObjectProgressListener());
+        PutObjectProgressListener listener = new PutObjectProgressListener();
+        ProgressEvent progressEvent = new ProgressEvent(ProgressEventType.REQUEST_BYTE_TRANSFER_EVENT);
+        listener.progressChanged(progressEvent);
+        request.setProgressListener(listener);
 
         /* 设置应用ID*/
         if (StringUtil.isNotEmpty(uploadFileFrom.getAppId())) {

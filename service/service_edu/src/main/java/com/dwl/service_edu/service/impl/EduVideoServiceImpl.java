@@ -4,15 +4,19 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dwl.common_utils.BeanUtil;
 import com.dwl.common_utils.ResultCode;
+import com.dwl.common_utils.StringUtil;
 import com.dwl.service_base.exception_handler.GuLiException;
 import com.dwl.service_edu.entity.EduVideo;
 import com.dwl.service_edu.entity.VideoInfoForm;
 import com.dwl.service_edu.mapper.EduVideoMapper;
 import com.dwl.service_edu.service.EduVideoService;
+import com.dwl.service_edu.client.VodClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
@@ -29,6 +33,16 @@ public class EduVideoServiceImpl extends ServiceImpl<EduVideoMapper, EduVideo> i
      * 日志信息
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(EduVideoServiceImpl.class);
+
+    private VodClient vodClient;
+
+    public EduVideoServiceImpl() {
+    }
+
+    @Autowired
+    public EduVideoServiceImpl(VodClient vodClient) {
+        this.vodClient = vodClient;
+    }
 
     /**
      * 根据课程id删除课时信息
@@ -101,10 +115,24 @@ public class EduVideoServiceImpl extends ServiceImpl<EduVideoMapper, EduVideo> i
      * @return
      */
     @Override
-    public boolean removeVideoById(String id) {
-        //删除视频资源 TODO
+    @Transactional
+    public void removeVideoById(String id) {
+        EduVideo video = baseMapper.selectById(id);
+        if (BeanUtil.isEmpty(video)) {
+            throw new GuLiException(ResultCode.DELETED_ERROR.getStatus(), "没有查询到课时信息！");
+        }
+        //删除视频资源
+        if (StringUtil.isNotEmpty(video.getVideoSourceId())) {
+            try {
+                vodClient.removeVideo(video.getVideoSourceId());
+            } catch (Exception e) {
+                throw new GuLiException(ResultCode.DELETED_ERROR.getStatus(), "删除视频异常：" + e);
+            }
+        }
         Integer result = baseMapper.deleteById(id);
-        return null != result && result > 0;
+        if (result <= 0) {
+            throw new GuLiException(ResultCode.DELETED_ERROR.getStatus(), "删除视频课时异常！");
+        }
     }
 
     /**
@@ -118,4 +146,5 @@ public class EduVideoServiceImpl extends ServiceImpl<EduVideoMapper, EduVideo> i
         queryWrapper.eq("course_id", courseId);
         baseMapper.delete(queryWrapper);
     }
+
 }

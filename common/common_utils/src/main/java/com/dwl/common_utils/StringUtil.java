@@ -1,5 +1,6 @@
 package com.dwl.common_utils;
 
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -143,5 +144,15 @@ public class StringUtil {
         }
         return tmp;
     }
-    
+
+    /**
+     * 在字符串后面添加对应的字符
+     *
+     * @param stringList
+     * @param string
+     * @return
+     */
+    public static String join(List<String> stringList, String string) {
+        return org.apache.commons.lang.StringUtils.join(stringList.toArray(), string);
+    }
 }

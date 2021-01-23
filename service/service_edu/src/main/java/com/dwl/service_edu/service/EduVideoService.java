@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.dwl.service_edu.entity.EduVideo;
 import com.dwl.service_edu.entity.VideoInfoForm;
 
+import java.util.List;
+
 /**
  * <p>
  * 课程视频 服务类
@@ -50,7 +52,7 @@ public interface EduVideoService extends IService<EduVideo> {
      * @param id
      * @return
      */
-    boolean removeVideoById(String id);
+    void removeVideoById(String id);
 
     /**
      * 根据courseId删除课时业务方法

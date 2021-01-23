@@ -18,11 +18,11 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
-import java.util.concurrent.TimeUnit;
 
 @EnableCaching
 @Configuration
 public class RedisConfig extends CachingConfigurerSupport {
+
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
@@ -63,6 +63,4 @@ public class RedisConfig extends CachingConfigurerSupport {
         return cacheManager;
     }
 
-    public void setCacheObject(String s, String objectName, int i, TimeUnit minutes) {
-    }
 }

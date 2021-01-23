@@ -1,11 +1,13 @@
 package com.dwl.service_vod.entity.from;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
  * 文件上传实体类
  */
+@ApiModel("文件上传实体类")
 @Data
 public class UploadFileFrom {
 

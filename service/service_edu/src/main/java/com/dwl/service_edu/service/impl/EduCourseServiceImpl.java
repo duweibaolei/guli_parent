@@ -7,23 +7,25 @@ import com.dwl.common_utils.BeanUtil;
 import com.dwl.common_utils.ResultCode;
 import com.dwl.common_utils.StringUtil;
 import com.dwl.service_base.exception_handler.GuLiException;
+import com.dwl.service_edu.client.VodClient;
 import com.dwl.service_edu.config.EduCommonStatus;
 import com.dwl.service_edu.entity.CourseQuery;
 import com.dwl.service_edu.entity.EduCourse;
 import com.dwl.service_edu.entity.EduCourseDescription;
+import com.dwl.service_edu.entity.EduVideo;
 import com.dwl.service_edu.entity.vo.CourseInfoVo;
 import com.dwl.service_edu.entity.vo.CoursePublishVo;
 import com.dwl.service_edu.mapper.EduCourseMapper;
-import com.dwl.service_edu.service.EduChapterService;
-import com.dwl.service_edu.service.EduCourseDescriptionService;
-import com.dwl.service_edu.service.EduCourseService;
-import com.dwl.service_edu.service.EduVideoService;
+import com.dwl.service_edu.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -54,15 +56,18 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
      */
     private EduChapterService chapterService;
 
+    private VodClient vodClient;
+
     EduCourseServiceImpl() {
     }
 
     @Autowired
     EduCourseServiceImpl(EduCourseDescriptionService descriptionService, EduVideoService videoService,
-                         EduChapterService chapterService) {
+                         EduChapterService chapterService, VodClient vodClient) {
         this.descriptionService = descriptionService;
         this.videoService = videoService;
         this.chapterService = chapterService;
+        this.vodClient = vodClient;
     }
 
 
@@ -217,8 +222,21 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
      */
     @Override
     public void removeCourseById(String id) {
-        //根据id删除所有视频
+        // 查询有多少视频存在云端
+        QueryWrapper<EduVideo> videoQueryWrapper = new QueryWrapper<>();
+        videoQueryWrapper.eq("course_id", id);
+        videoQueryWrapper.select("video_source_id");
+        List<EduVideo> videoList = videoService.list(videoQueryWrapper);
+        // 获取到所有的云端相关的视频id
+        List<String> videoIdList = new ArrayList<>();
+        for (EduVideo video : videoList) {
+            videoIdList.add(video.getVideoSourceId());
+        }
+        // 调用阿里云服务删除视频
+        vodClient.removeVideoList(videoIdList);
+        //根据id删除所有视频相关信息
         videoService.removeByCourseId(id);
+
         //根据id删除所有章节
         chapterService.removeByCourseId(id);
         // 最后删除课程

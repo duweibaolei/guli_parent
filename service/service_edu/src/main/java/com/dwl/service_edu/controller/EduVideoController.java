@@ -112,11 +112,11 @@ public class EduVideoController {
     public Result removeById(
             @ApiParam(name = "id", value = "课时ID", required = true)
             @PathVariable String id) {
-        boolean result = eduVideoService.removeVideoById(id);
-        if (result) {
+        try {
+            eduVideoService.removeVideoById(id);
             return Result.ok();
-        } else {
-            return Result.error().message("删除课时失败");
+        } catch (Exception e) {
+            return Result.error().message("删除课时失败：" + e);
         }
     }
 }

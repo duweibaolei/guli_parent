@@ -3,7 +3,14 @@ package com.dwl.service_vod.vodUtil;
 import com.aliyun.oss.event.ProgressEvent;
 import com.aliyun.oss.event.ProgressEventType;
 import com.aliyun.vod.upload.impl.VoDProgressListener;
+import com.dwl.service_base.util.RedisUtils;
 import lombok.Data;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * 上传进度回调方法类
@@ -14,6 +21,11 @@ import lombok.Data;
  */
 @Data
 public class PutObjectProgressListener implements VoDProgressListener {
+
+    /**
+     * 日志服务
+     */
+    public static final Logger LOGGER = LoggerFactory.getLogger(PutObjectProgressListener.class);
 
     /**
      * 已成功上传至OSS的字节数
@@ -38,13 +50,18 @@ public class PutObjectProgressListener implements VoDProgressListener {
 
     @Override
     public void onVidReady(String s) {
+    }
 
+    private RedisUtils redisUtils;
+
+    public PutObjectProgressListener(){}
+
+    public PutObjectProgressListener(RedisUtils redisUtils){
+        this.redisUtils = redisUtils;
     }
 
     @Override
     public void onImageIdReady(String s) {
-
-
     }
 
     @Override
@@ -55,51 +72,54 @@ public class PutObjectProgressListener implements VoDProgressListener {
             //开始上传事件
             case TRANSFER_STARTED_EVENT:
                 if (videoId != null) {
-                    System.out.println("Start to upload videoId " + videoId + "......");
+                    LOGGER.info("Start to upload videoId：{}", videoId);
                 }
                 if (imageId != null) {
-                    System.out.println("Start to upload imageId " + imageId + "......");
+                    LOGGER.info("Start to upload imageId：{}", imageId);
                 }
                 break;
             //计算待上传文件总大小事件通知，只有调用本地文件方式上传时支持该事件
             case REQUEST_CONTENT_LENGTH_EVENT:
                 this.totalBytes = bytes;
-                System.out.println(this.totalBytes + "bytes in total will be uploaded to OSS.");
+                LOGGER.error("{}：bytes in total will be uploaded to OSS.", this.totalBytes);
                 break;
             //已经上传成功文件大小事件通知
             case REQUEST_BYTE_TRANSFER_EVENT:
                 this.bytesWritten = bytes;
+                if (this.bytesWritten > 0) {
+                    int percent = (int) (this.bytesWritten / 100.0);
+                    System.out.println("------------------------" + percent);
+                    redisUtils.set("progressData", percent, 10L, TimeUnit.MINUTES);
+                }
                 if (this.totalBytes != -1) {
                     int percent = (int) (this.bytesWritten * 100.0 / this.totalBytes);
-                    System.out.println(bytes + " bytes have been written at this time, upload progress: " +
-                            percent + "%(" + this.bytesWritten + "/" + this.totalBytes + ")");
+                    LOGGER.error("{}: bytes have been written at this time, upload progress: {}  %( {} / {} ）", bytes, percent, this.bytesWritten, this.totalBytes);
                 } else {
-                    System.out.println(bytes + " bytes have been written at this time, upload sub total : "
-                            + "(" + this.bytesWritten + ")");
+                    LOGGER.error("{}: bytes have been written at this time, upload sub total : ( {} )", bytes, this.bytesWritten);
                 }
                 break;
             //文件全部上传成功事件通知
             case TRANSFER_COMPLETED_EVENT:
                 this.succeed = true;
                 if (videoId != null) {
-                    System.out.println("Succeed to upload videoId " + videoId + " , " + this.bytesWritten + " bytes have been transferred in total.");
+                    LOGGER.error("Succeed to upload videoId：{}, {} bytes have been transferred in total.", videoId, this.bytesWritten);
                 }
                 if (imageId != null) {
-                    System.out.println("Succeed to upload imageId " + imageId + " , " + this.bytesWritten + " bytes have been transferred in total.");
+                    LOGGER.error("Succeed to upload imageId：{}, {} bytes have been transferred in total.", videoId, this.bytesWritten);
                 }
                 break;
             //文件上传失败事件通知
             case TRANSFER_FAILED_EVENT:
                 if (videoId != null) {
-                    System.out.println("Failed to upload videoId " + videoId + " , " + this.bytesWritten + " bytes have been transferred.");
+                    LOGGER.error("Failed to upload videoId：{}, {} bytes have been transferred", videoId, this.bytesWritten);
                 }
                 if (imageId != null) {
-                    System.out.println("Failed to upload imageId " + imageId + " , " + this.bytesWritten + " bytes have been transferred.");
+                    LOGGER.error("Failed to upload imageId：{}, {} bytes have been transferred", videoId, this.bytesWritten);
                 }
                 break;
-
             default:
                 break;
         }
     }
+
 }
