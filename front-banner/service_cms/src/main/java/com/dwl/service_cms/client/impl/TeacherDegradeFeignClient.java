@@ -1,6 +1,6 @@
 package com.dwl.service_cms.client.impl;
 
-import com.dwl.common_utils.Result;
+import com.dwl.common_utils.Result.Result;
 import com.dwl.service_cms.client.TeacherClient;
 import org.springframework.stereotype.Component;
 

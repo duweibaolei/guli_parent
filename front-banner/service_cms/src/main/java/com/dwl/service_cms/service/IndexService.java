@@ -1,10 +1,23 @@
 package com.dwl.service_cms.service;
 
-import java.util.Map;
+import java.util.List;
 
 public interface IndexService {
 
-    Map<String, Object> getTeacherIndex();
+    /**
+     * 获取头几位讲师
+     *
+     * @param limit
+     * @return
+     */
+    List<Object> getTeacherIndex(String limit);
 
-    Map<String, Object> getCourseIndex();
+    /**
+     * 获取头几们课程
+     *
+     * @param limit
+     * @return
+     */
+    List<Object> getCourseIndex(String limit);
+
 }

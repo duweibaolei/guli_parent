@@ -1,11 +1,9 @@
 package com.dwl.service_edu.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.dwl.common_utils.BeanUtil;
-import com.dwl.common_utils.Result;
-import com.dwl.common_utils.StringUtil;
+import com.dwl.common_utils.util.BeanUtil;
+import com.dwl.common_utils.Result.Result;
 import com.dwl.service_edu.entity.CourseQuery;
 import com.dwl.service_edu.entity.EduCourse;
 import com.dwl.service_edu.entity.vo.CourseInfoVo;
@@ -86,9 +84,6 @@ public class EduCourseController {
     @GetMapping("/getCourseInfoById/{id}")
     public Result getCourseInfoById(
             @ApiParam(name = "id", value = "课程信息ID", required = true) @PathVariable String id) {
-        if (StringUtil.isEmpty(id)) {
-            return Result.error().message("课程基本信息id为空！");
-        }
         try {
             CourseInfoVo infoVo = eduCourseService.getCourseInfo(id);
             return Result.ok().data("infoVo", infoVo);
@@ -148,9 +143,7 @@ public class EduCourseController {
             /* 调用方法实现分页
              * 调用方法时候，底层封装，把分页所有数据封装到pageTeacher对象里面 */
             eduCourseService.courseQueryPage(courseQuery, queryPage);
-            long total = queryPage.getTotal();//总记录数
-            List<EduCourse> coursePage = queryPage.getRecords(); //数据list集合
-            return Result.ok().data("total", total).data("coursePage", coursePage);
+            return Result.ok().data("total", queryPage.getTotal()).data("coursePage", queryPage.getRecords());
         } catch (Exception e) {
             LOGGER.error("课程类别分页查询异常：{}", e.getMessage());
             return Result.error().message("课程类别分页查询异常：{}" + e.getMessage());
@@ -168,12 +161,13 @@ public class EduCourseController {
     public Result listCourse(
             @ApiParam(name = "limit", value = "每页记录数", required = true)
             @PathVariable String limit) {
-        // 查询前几条课程
-        QueryWrapper<EduCourse> wrapperCourse = new QueryWrapper<>();
-        wrapperCourse.orderByDesc("buy_count");
-        wrapperCourse.last("limit " + limit);
-        List<EduCourse> courseList = eduCourseService.list(wrapperCourse);
-        return Result.ok().data("courseList", courseList);
+        try {
+            List<EduCourse> courseList = eduCourseService.getCourseList(limit);
+            return Result.ok().data("courseList", courseList);
+        } catch (Exception e) {
+            LOGGER.error("首页获取前几个指定课程异常：{}", e + "");
+            return Result.error().message("首页获取前几个指定课程异常：" + e);
+        }
     }
 
     /**

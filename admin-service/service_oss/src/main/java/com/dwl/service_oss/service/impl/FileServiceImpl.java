@@ -3,7 +3,7 @@ package com.dwl.service_oss.service.impl;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.model.CannedAccessControlList;
-import com.dwl.common_utils.ResultCode;
+import com.dwl.common_utils.Result.ResultCode;
 import com.dwl.service_base.exception_handler.GuLiException;
 import com.dwl.service_oss.ossUtil.ConstantPropertiesUtil;
 import com.dwl.service_oss.service.FileService;

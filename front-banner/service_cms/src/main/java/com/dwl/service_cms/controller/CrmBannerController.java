@@ -3,7 +3,7 @@ package com.dwl.service_cms.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.dwl.common_utils.Result;
+import com.dwl.common_utils.Result.Result;
 import com.dwl.service_cms.entity.CrmBanner;
 import com.dwl.service_cms.service.CrmBannerService;
 import io.swagger.annotations.Api;
@@ -38,7 +38,7 @@ public class CrmBannerController {
     /**
      * 首页横幅广告服务类
      */
-    private CrmBannerService bannerService;
+    private final CrmBannerService bannerService;
 
     @Autowired
     public CrmBannerController(CrmBannerService bannerService) {

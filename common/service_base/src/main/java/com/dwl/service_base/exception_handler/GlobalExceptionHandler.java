@@ -1,6 +1,6 @@
 package com.dwl.service_base.exception_handler;
 
-import com.dwl.common_utils.Result;
+import com.dwl.common_utils.Result.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

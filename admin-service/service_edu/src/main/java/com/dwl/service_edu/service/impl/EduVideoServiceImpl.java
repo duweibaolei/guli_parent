@@ -2,9 +2,9 @@ package com.dwl.service_edu.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.dwl.common_utils.BeanUtil;
-import com.dwl.common_utils.ResultCode;
-import com.dwl.common_utils.StringUtil;
+import com.dwl.common_utils.util.BeanUtil;
+import com.dwl.common_utils.Result.ResultCode;
+import com.dwl.common_utils.util.StringUtil;
 import com.dwl.service_base.exception_handler.GuLiException;
 import com.dwl.service_edu.entity.EduVideo;
 import com.dwl.service_edu.entity.VideoInfoForm;

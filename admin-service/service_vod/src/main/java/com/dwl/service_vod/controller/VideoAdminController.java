@@ -1,7 +1,7 @@
 package com.dwl.service_vod.controller;
 
 
-import com.dwl.common_utils.Result;
+import com.dwl.common_utils.Result.Result;
 import com.dwl.service_base.util.RedisUtils;
 import com.dwl.service_vod.service.VideoService;
 import io.swagger.annotations.Api;

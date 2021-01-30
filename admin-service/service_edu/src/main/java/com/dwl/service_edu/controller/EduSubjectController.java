@@ -1,8 +1,8 @@
 package com.dwl.service_edu.controller;
 
 
-import com.dwl.common_utils.BeanUtil;
-import com.dwl.common_utils.Result;
+import com.dwl.common_utils.util.BeanUtil;
+import com.dwl.common_utils.Result.Result;
 import com.dwl.service_edu.entity.vo.SubjectNestedVo;
 import com.dwl.service_edu.service.EduSubjectService;
 import io.swagger.annotations.Api;

@@ -1,7 +1,7 @@
 package com.dwl.service_oss.controller;
 
-import com.dwl.common_utils.Result;
-import com.dwl.common_utils.StringUtil;
+import com.dwl.common_utils.Result.Result;
+import com.dwl.common_utils.util.StringUtil;
 import com.dwl.service_oss.service.FileService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

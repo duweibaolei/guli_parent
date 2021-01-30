@@ -13,6 +13,8 @@
     <packaging>pom</packaging>
     <modules>
         <module>service_cms</module>
+        <module>service_msm</module>
+        <module>service_ucenter</module>
     </modules>
 
     <dependencies>

@@ -2,8 +2,8 @@ package com.dwl.service_edu.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.dwl.common_utils.BeanUtil;
-import com.dwl.common_utils.ResultCode;
+import com.dwl.common_utils.util.BeanUtil;
+import com.dwl.common_utils.Result.ResultCode;
 import com.dwl.service_base.exception_handler.GuLiException;
 import com.dwl.service_edu.entity.EduChapter;
 import com.dwl.service_edu.entity.EduVideo;
@@ -102,7 +102,7 @@ public class EduChapterServiceImpl extends ServiceImpl<EduChapterMapper, EduChap
     public boolean removeChapterById(String id) {
         //根据id查询是否存在视频，如果有则提示用户尚有子节点
         if (videoService.getCountByChapterId(id)) {
-            throw new GuLiException(ResultCode.UPDATA_ERROR.getStatus(), "该分章节下存在视频课程，请先删除视频课程");
+            throw new GuLiException(ResultCode.UPDATE_ERROR.getStatus(), "该分章节下存在视频课程，请先删除视频课程");
         }
         Integer result = baseMapper.deleteById(id);
         return null != result && result > 0;

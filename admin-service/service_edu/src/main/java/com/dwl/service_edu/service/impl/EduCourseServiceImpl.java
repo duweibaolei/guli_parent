@@ -3,9 +3,9 @@ package com.dwl.service_edu.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.dwl.common_utils.BeanUtil;
-import com.dwl.common_utils.ResultCode;
-import com.dwl.common_utils.StringUtil;
+import com.dwl.common_utils.util.BeanUtil;
+import com.dwl.common_utils.Result.ResultCode;
+import com.dwl.common_utils.util.StringUtil;
 import com.dwl.service_base.exception_handler.GuLiException;
 import com.dwl.service_edu.client.VodClient;
 import com.dwl.service_edu.config.EduCommonStatus;
@@ -16,11 +16,15 @@ import com.dwl.service_edu.entity.EduVideo;
 import com.dwl.service_edu.entity.vo.CourseInfoVo;
 import com.dwl.service_edu.entity.vo.CoursePublishVo;
 import com.dwl.service_edu.mapper.EduCourseMapper;
-import com.dwl.service_edu.service.*;
+import com.dwl.service_edu.service.EduChapterService;
+import com.dwl.service_edu.service.EduCourseDescriptionService;
+import com.dwl.service_edu.service.EduCourseService;
+import com.dwl.service_edu.service.EduVideoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,6 +82,7 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
      */
     @Override
     @Transactional
+    @CacheEvict(value = "courseList", allEntries = true)
     public String saveOrUpdateCourseInfo(CourseInfoVo courseInfoVo) {
         String courseId = null;
 
@@ -112,13 +117,13 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
             boolean flag = this.updateById(course);
             if (!flag) {
                 LOGGER.error("课程基本信息更新异常，课程基本信息ID为：{}", course.getId());
-                throw new GuLiException(ResultCode.UPDATA_ERROR.getStatus(), "课程信息更新失败");
+                throw new GuLiException(ResultCode.UPDATE_ERROR.getStatus(), "课程信息更新失败");
             }
             // 更新课程的简介信息
             flag = descriptionService.updateById(description);
             if (!flag) {
                 LOGGER.error("课程介绍信息更新异常，课程介绍信息ID为：{}", description.getId());
-                throw new GuLiException(ResultCode.UPDATA_ERROR.getStatus(), "课程介绍保存失败");
+                throw new GuLiException(ResultCode.UPDATE_ERROR.getStatus(), "课程介绍保存失败");
             }
         }
         return courseId;
@@ -221,6 +226,8 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
      * @param id
      */
     @Override
+    @Transactional
+    @CacheEvict(value = "courseList", allEntries = true)
     public void removeCourseById(String id) {
         // 查询有多少视频存在云端
         QueryWrapper<EduVideo> videoQueryWrapper = new QueryWrapper<>();
@@ -234,12 +241,27 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
         }
         // 调用阿里云服务删除视频
         vodClient.removeVideoList(videoIdList);
-        //根据id删除所有视频相关信息
+        // 根据id删除所有视频相关信息
         videoService.removeByCourseId(id);
-
-        //根据id删除所有章节
+        // 根据id删除所有章节
         chapterService.removeByCourseId(id);
         // 最后删除课程
         baseMapper.deleteById(id);
+    }
+
+    /**
+     * 获取指定的前几个课程
+     *
+     * @param limit
+     * @return
+     */
+    @Override
+    public List<EduCourse> getCourseList(String limit) {
+        // 查询前几条课程
+        QueryWrapper<EduCourse> wrapperCourse = new QueryWrapper<>();
+        wrapperCourse.orderByDesc("buy_count");
+        wrapperCourse.last("limit " + limit);
+        List<EduCourse> courseList = baseMapper.selectList(wrapperCourse);
+        return courseList;
     }
 }

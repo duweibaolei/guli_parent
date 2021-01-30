@@ -1,6 +1,6 @@
 package com.dwl.service_edu.controller;
 
-import com.dwl.common_utils.Result;
+import com.dwl.common_utils.Result.Result;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

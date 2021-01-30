@@ -79,5 +79,4 @@ public class EduCourse implements Serializable {
     @TableField(fill = FieldFill.UPDATE)
     private Date gmtModified;
 
-
 }

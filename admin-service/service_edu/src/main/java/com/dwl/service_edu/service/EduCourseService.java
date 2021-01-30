@@ -7,6 +7,8 @@ import com.dwl.service_edu.entity.EduCourse;
 import com.dwl.service_edu.entity.vo.CourseInfoVo;
 import com.dwl.service_edu.entity.vo.CoursePublishVo;
 
+import java.util.List;
+
 /**
  * <p>
  * 课程 服务类
@@ -62,4 +64,12 @@ public interface EduCourseService extends IService<EduCourse> {
      * @param id
      */
     void removeCourseById(String id);
+
+    /**
+     * 获取指定的前几个课程
+     *
+     * @param limit
+     * @return
+     */
+    List<EduCourse> getCourseList(String limit);
 }

@@ -1,6 +1,6 @@
 package com.dwl.service_edu.client;
 
-import com.dwl.common_utils.Result;
+import com.dwl.common_utils.Result.Result;
 import com.dwl.service_edu.client.impl.VodFileDegradeFeignClient;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;

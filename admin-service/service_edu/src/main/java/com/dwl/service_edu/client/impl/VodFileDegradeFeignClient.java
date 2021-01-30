@@ -1,6 +1,6 @@
 package com.dwl.service_edu.client.impl;
 
-import com.dwl.common_utils.Result;
+import com.dwl.common_utils.Result.Result;
 import com.dwl.service_edu.client.VodClient;
 import org.springframework.stereotype.Component;
 

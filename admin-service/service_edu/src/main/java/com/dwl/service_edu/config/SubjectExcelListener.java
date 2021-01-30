@@ -4,7 +4,7 @@ package com.dwl.service_edu.config;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.dwl.common_utils.StringUtil;
+import com.dwl.common_utils.util.StringUtil;
 import com.dwl.service_base.exception_handler.GuLiException;
 import com.dwl.service_edu.entity.EduSubject;
 import com.dwl.service_edu.entity.excel.ExcelSubjectData;

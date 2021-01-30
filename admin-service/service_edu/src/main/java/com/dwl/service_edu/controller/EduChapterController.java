@@ -1,7 +1,7 @@
 package com.dwl.service_edu.controller;
 
 
-import com.dwl.common_utils.Result;
+import com.dwl.common_utils.Result.Result;
 import com.dwl.service_edu.entity.EduChapter;
 import com.dwl.service_edu.entity.vo.ChapterNestedVo;
 import com.dwl.service_edu.service.EduChapterService;

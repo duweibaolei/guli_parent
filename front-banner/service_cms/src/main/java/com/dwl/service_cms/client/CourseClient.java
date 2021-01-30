@@ -1,6 +1,6 @@
 package com.dwl.service_cms.client;
 
-import com.dwl.common_utils.Result;
+import com.dwl.common_utils.Result.Result;
 import com.dwl.service_cms.client.impl.CourseDegradeFeignClient;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
@@ -12,6 +12,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "service-edu", fallback = CourseDegradeFeignClient.class)
 public interface CourseClient {
 
+    /**
+     * 首页获取课程数据
+     *
+     * @param limit
+     * @return
+     */
     @GetMapping("/eduService/eduCourse/listCourse/{limit}")
     Result listCourse(@PathVariable("limit") String limit);
 
