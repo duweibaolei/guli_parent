@@ -12,10 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @RequestMapping("/serviceUcEnter/ucEnterMember")
+@CrossOrigin
 @Api("会员表 前端控制器")
 public class UcenterMemberController {
 
@@ -89,10 +87,9 @@ public class UcenterMemberController {
      * @return Result
      */
     @ApiOperation("根据token获取登录信息")
-    @PostMapping("/getLoginInfo")
+    @GetMapping("/getLoginInfo")
     public Result getLoginInfo(
-            @ApiParam(name = "request", value = "会员登录信息", required = true)
-            @RequestBody HttpServletRequest request) {
+            @ApiParam(name = "request", value = "会员登录信息", required = true) HttpServletRequest request) {
         String id = JwtUtil.getMemberIdByJwtToken(request);
         try {
             LoginInfoVo infoVo = memberService.loginInfo(id);

@@ -27,7 +27,7 @@ public class StringUtil {
         while (regexMatcher.find()) {
             String key = regexMatcher.group(1);
             String toReplace = regexMatcher.group(0);
-            String value = (String) map.get(key);
+            String value = map.get(key);
             if (value != null)
                 template = template.replace(toReplace, value);
             else {

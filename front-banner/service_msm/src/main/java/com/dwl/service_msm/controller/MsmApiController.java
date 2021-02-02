@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -49,20 +51,28 @@ public class MsmApiController {
     public Result sendMsm(
             @ApiParam(name = "phone", value = "用户手机号", required = true)
             @PathVariable String phone) {
-        // 从redis获取验证码，如果获取到直接返回
-        String code = (String) redisUtils.get(phone);
-        if (!StringUtil.isEmpty(code)) {
-            return Result.ok();
-        }
         try {
+            String code = (String) redisUtils.get(phone);
+            // 从redis获取验证码，如果获取到直接返回
+            if (!StringUtil.isEmpty(code)) {
+                return Result.error().message("你发送太过频繁啦！请稍后再试！");
+            }
+            Map<String,Object> param = new HashMap<>();
+            param.put("code", code);
             // 调用service发送短信的方法
-            msmService.send(phone, "SMS_180051135");
+            msmService.send(phone, "SMS_180051135", param);
+            // 临时使用
+            for(Map.Entry<String, Object> entry : param.entrySet()){
+                if(entry.getKey().equals("code")){
+                    code = (String)entry.getValue();
+                }
+            }
             /* 发送成功，把发送成功验证码放到redis里面 设置有效时间 */
-            redisUtils.set(phone, code, 5L, TimeUnit.MINUTES);
-            return Result.ok();
+            redisUtils.set(phone, code, 1L, TimeUnit.MINUTES);
+            return Result.ok().data("code", code);
         } catch (Exception e) {
             LOGGER.error("用户手机号 {}发送短信失败：{}", phone, e + "");
-            return Result.error().message("短信发送失败");
+            return Result.error().message("短信发送失败" + e);
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.dwl.service_msm.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.dysmsapi.model.v20170525.QuerySendDetailsRequest;
@@ -11,6 +12,7 @@ import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 import com.dwl.common_utils.Result.ResultCode;
+import com.dwl.common_utils.util.MD5Util;
 import com.dwl.common_utils.util.StringUtil;
 import com.dwl.service_base.exception_handler.GuLiException;
 import com.dwl.service_msm.msmUtil.ConstantPropertiesUtil;
@@ -20,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 阿里云短信服务签名无法申请下来！这个功能暂定使用。
@@ -35,10 +38,11 @@ public class MsmServiceImpl implements MsmService {
     /**
      * 阿里云发送短信服务
      *
-     * @param phoneNumbers 手机号
+     * @param phone        手机号
      * @param templateCode 模板编号
+     * @param param        模板中的变量
      */
-    public void send(String phoneNumbers, String templateCode) {
+    public void send(String phone, String templateCode, Map<String, Object> param) {
 
         // 设置超时时间-可自行调整
         System.setProperty("sun.net.client.defaultConnectTimeout", "50000");
@@ -61,7 +65,7 @@ public class MsmServiceImpl implements MsmService {
             /* 必填:待发送手机号。支持以逗号分隔的形式进行批量调用，批量上限为1000个手机号码,
             批量调用相对于单条调用及时性稍有延迟,验证码类型的短信推荐使用单条调用的方式；
             发送国际/港澳台消息时，接收号码格式为国际区号+号码，如“85200000000” */
-            request.setPhoneNumbers(phoneNumbers);
+            request.setPhoneNumbers(phone);
 
             // 必填:短信签名-可在短信控制台中找到
             request.setSignName("云通信");
@@ -72,8 +76,8 @@ public class MsmServiceImpl implements MsmService {
             /* 可选:模板中的变量替换JSON串,如模板内容为"亲爱的${name},您的验证码为${code}"时,此处的值为
                 友情提示:如果JSON中需要带换行符,请参照标准的JSON协议对换行符的要求,
                 比如短信内容中包含\r\n的情况在JSON中需要表示成\\r\\n,否则会导致JSON在服务端解析失败
-            参考：request.setTemplateParam("{\"变量1\":\"值1\",\"变量2\":\"值2\",\"变量3\":\"值3\"}")
-            request.setTemplateParam("{\"name\":\"Tom\", \"code\":\"123\"}"); */
+            参考：request.setTemplateParam("{\"变量1\":\"值1\",\"变量2\":\"值2\",\"变量3\":\"值3\"}")  */
+            request.setTemplateParam(JSONObject.toJSONString(param));
 
             /* 可选-上行短信扩展码(扩展码字段控制在7位或以下，无特殊需求用户请忽略此字段)
             request.setSmsUpExtendCode("90997"); */
@@ -81,16 +85,26 @@ public class MsmServiceImpl implements MsmService {
             /* 可选:outId为提供给业务方扩展字段,最终在短信回执消息中将此值带回给调用者
             request.setOutId("yourOutId"); */
 
-            // 请求失败这里会抛ClientException异常
-            SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
+            /* 请求失败这里会抛ClientException异常
+             * 由于短信功能需要进行企业认证，暂时使用随机的数字代替使用
+            SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request); */
+            // 临时使用
+            SendSmsResponse sendSmsResponse = new SendSmsResponse();
+            sendSmsResponse.setCode("OK");
+            sendSmsResponse.setBizId("临时使用--");
+            for (Map.Entry<String, Object> entrySet : param.entrySet()){
+                entrySet.setValue(String.valueOf(MD5Util.randomNumber()));
+            }
+            // end
+
             LOGGER.info("用户发送短信后的bizId：{}", sendSmsResponse.getBizId());
             if (StringUtil.isEmpty(sendSmsResponse.getCode()) && !sendSmsResponse.getCode().equals("OK")) {
-                LOGGER.error("用户手机 [{}]短信发送失败！也没有抛出异常！请检查数据！", phoneNumbers);
+                LOGGER.error("用户手机 [{}]短信发送失败！也没有抛出异常！请检查数据！", phone);
                 throw new GuLiException(ResultCode.MESSAGES_ERROR.getStatus(),
-                        "用户手机 [" + phoneNumbers + "]短信发送失败！也没有抛出异常！请检查数据！");
+                        "用户手机 [" + phone + "]短信发送失败！也没有抛出异常！请检查数据！");
             }
         } catch (ClientException e) {
-            LOGGER.error("用户手机 [{}] 短信发送失败！异常信息为：[{}]", phoneNumbers, e);
+            LOGGER.error("用户手机 [{}] 短信发送失败！异常信息为：[{}]", phone, e);
             throw new GuLiException(ResultCode.MESSAGES_ERROR.getStatus(), e + "");
         }
     }

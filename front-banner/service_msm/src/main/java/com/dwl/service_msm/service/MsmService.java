@@ -3,16 +3,17 @@ package com.dwl.service_msm.service;
 import com.aliyuncs.dysmsapi.model.v20170525.QuerySendDetailsResponse;
 
 import java.util.List;
+import java.util.Map;
 
 public interface MsmService {
 
     /**
      * 阿里云发送短信服务
-     *
-     * @param phoneNumbers 手机号
+     *  @param phone 手机号
      * @param templateCode 模板编号
+     * @param param 模板中的变量
      */
-    void send(String phoneNumbers, String templateCode);
+    void send(String phone, String templateCode, Map<String, Object> param);
 
     /**
      * @param phoneNumbers 手机号
