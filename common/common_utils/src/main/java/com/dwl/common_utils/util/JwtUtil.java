@@ -81,6 +81,7 @@ public class JwtUtil {
      */
     public static boolean checkToken(HttpServletRequest request) {
         try {
+            System.out.println("request:" + request);
             String jwtToken = request.getHeader("token");
             if (StringUtil.isEmpty(jwtToken)) return false;
             Jwts.parser().setSigningKey(APP_SECRET).parseClaimsJws(jwtToken);

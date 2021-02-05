@@ -7,6 +7,8 @@ import com.dwl.service_ucenter.entity.vo.LoginVo;
 import com.dwl.service_ucenter.entity.vo.RegisterVo;
 import io.swagger.annotations.Api;
 
+import java.util.HashMap;
+
 /**
  * <p>
  * 会员表 服务类
@@ -38,4 +40,13 @@ public interface UcenterMemberService extends IService<UcenterMember> {
      * @return
      */
     LoginInfoVo loginInfo(String id);
+
+    /**
+     * 微信扫码登录保存用户信息
+     *
+     * @param openid      扫描人凭证id
+     * @param userInfoMap 从微信获取的用户信息
+     * @return UcenterMember
+     */
+    UcenterMember saveUcEnterMember(String openid, HashMap userInfoMap);
 }

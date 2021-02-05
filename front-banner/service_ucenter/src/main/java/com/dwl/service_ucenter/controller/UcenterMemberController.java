@@ -2,7 +2,10 @@ package com.dwl.service_ucenter.controller;
 
 
 import com.dwl.common_utils.Result.Result;
+import com.dwl.common_utils.util.BeanUtil;
 import com.dwl.common_utils.util.JwtUtil;
+import com.dwl.common_utils.util.StringUtil;
+import com.dwl.service_base.util.RedisUtils;
 import com.dwl.service_ucenter.entity.vo.LoginInfoVo;
 import com.dwl.service_ucenter.entity.vo.LoginVo;
 import com.dwl.service_ucenter.entity.vo.RegisterVo;
@@ -12,6 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,8 +41,15 @@ public class UcenterMemberController {
      */
     private final UcenterMemberService memberService;
 
-    public UcenterMemberController(UcenterMemberService memberService) {
+    /**
+     * redis服务类
+     */
+    private final RedisUtils redisUtils;
+
+    @Autowired
+    public UcenterMemberController(UcenterMemberService memberService, RedisUtils redisUtils) {
         this.memberService = memberService;
+        this.redisUtils = redisUtils;
     }
 
     /**
@@ -51,7 +62,6 @@ public class UcenterMemberController {
             @ApiParam(name = "loginVo", value = "会员登录对象", required = true)
             @RequestBody LoginVo loginVo) {
         try {
-
             String token = memberService.login(loginVo);
             LOGGER.info("会员登录：账号 [{}]", loginVo.getMobile());
             return Result.ok().data("token", token);
@@ -92,7 +102,14 @@ public class UcenterMemberController {
             @ApiParam(name = "request", value = "会员登录信息", required = true) HttpServletRequest request) {
         String id = JwtUtil.getMemberIdByJwtToken(request);
         try {
-            LoginInfoVo infoVo = memberService.loginInfo(id);
+            if (StringUtil.isEmpty(id)) {
+                return Result.error().message("会员登录信息，从token中获取id为空！");
+            }
+            // 查询redis中是否存在，如果没有则查询数据库
+            LoginInfoVo infoVo = (LoginInfoVo) redisUtils.get("member_openid");
+            if (BeanUtil.isEmpty(infoVo)) {
+                infoVo = memberService.loginInfo(id);
+            }
             return Result.ok().data("info", infoVo);
         } catch (Exception e) {
             LOGGER.error("获取登录信息异常，异常信息：[{}]", e + "");

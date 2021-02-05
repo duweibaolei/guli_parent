@@ -20,6 +20,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+
 /**
  * <p>
  * 会员表 服务实现类
@@ -116,6 +118,27 @@ public class UcenterMemberServiceImpl extends ServiceImpl<UcenterMemberMapper, U
         LoginInfoVo infoVo = new LoginInfoVo();
         BeanUtils.copyProperties(member, infoVo);
         return infoVo;
+    }
+
+    /**
+     * 微信扫码登录保存用户信息
+     *
+     * @param openid      扫描人凭证id
+     * @param userInfoMap 从微信获取的用户信息
+     * @return UcenterMember
+     */
+    @Override
+    public UcenterMember saveUcEnterMember(String openid, HashMap userInfoMap) {
+        if (BeanUtil.isEmpty(userInfoMap)) {
+            throw new GuLiException(ResultCode.NULL_ERROR.getStatus(), "获取微信信息为空！");
+        }
+        UcenterMember member = new UcenterMember();
+        member.setOpenid(openid);
+        member.setNickname((String) userInfoMap.get("nickname"));
+        member.setAvatar((String) userInfoMap.get("headimgurl"));
+//        member.setSex((int) userInfoMap.get("sex"));
+        baseMapper.insert(member);
+        return member;
     }
 
 
