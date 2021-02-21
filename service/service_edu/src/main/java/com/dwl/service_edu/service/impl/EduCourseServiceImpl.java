@@ -3,8 +3,8 @@ package com.dwl.service_edu.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.dwl.common_utils.util.BeanUtil;
 import com.dwl.common_utils.Result.ResultCode;
+import com.dwl.common_utils.util.BeanUtil;
 import com.dwl.common_utils.util.StringUtil;
 import com.dwl.service_base.exception_handler.GuLiException;
 import com.dwl.service_edu.client.VodClient;
@@ -29,7 +29,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -59,6 +61,8 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
      * 课程章节服务类
      */
     private EduChapterService chapterService;
+
+    EduCourseService eduCourseService;
 
     private VodClient vodClient;
 
@@ -261,7 +265,51 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
         QueryWrapper<EduCourse> wrapperCourse = new QueryWrapper<>();
         wrapperCourse.orderByDesc("buy_count");
         wrapperCourse.last("limit " + limit);
-        List<EduCourse> courseList = baseMapper.selectList(wrapperCourse);
-        return courseList;
+        return baseMapper.selectList(wrapperCourse);
+    }
+
+    /**
+     * 通过讲师id获取讲师的相关课程信息
+     *
+     * @param id 讲师id
+     * @return 课程集合
+     */
+    @Override
+    public List<EduCourse> getByTeacherId(String id) {
+        if (StringUtil.isEmpty(id)) {
+            return null;
+        }
+        QueryWrapper<EduCourse> courseQueryWrapper = new QueryWrapper<>();
+        courseQueryWrapper.eq("teacher_id", id);
+        courseQueryWrapper.orderByDesc("gmt_modified");
+        return list(courseQueryWrapper);
+    }
+
+    /**
+     * 前端获取讲师分页列表
+     *
+     * @param current 当前页
+     * @param limit   每页记录数
+     * @return Map<String, Object>
+     */
+    @Override
+    public Map<String, Object> pageListWeb(long current, long limit) {
+        Page<EduCourse> coursePage = new Page<>(current, limit);
+        QueryWrapper<EduCourse> courseQueryWrapper = new QueryWrapper<>();
+        courseQueryWrapper.orderByDesc("view_count");
+        baseMapper.selectPage(coursePage, courseQueryWrapper);
+
+        // 把分页数据获取出来，放到map集合
+        Map<String, Object> map = new HashMap<>();
+        map.put("items", coursePage.getRecords());
+        map.put("current", coursePage.getCurrent());
+        map.put("pages", coursePage.getPages());
+        map.put("size", coursePage.getSize());
+        map.put("total", coursePage.getTotal());
+        map.put("hasNext", coursePage.hasNext());
+        map.put("hasPrevious", coursePage.hasPrevious());
+
+        // map返回
+        return map;
     }
 }

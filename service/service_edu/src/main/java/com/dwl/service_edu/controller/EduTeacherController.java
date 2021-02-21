@@ -30,7 +30,7 @@ import java.util.List;
  * @since 2020-11-12
  */
 
-@Api("讲师管理")
+@Api(tags = "讲师管理")
 @CrossOrigin // 跨域
 @RestController
 @RequestMapping("/eduService/eduTeacher")

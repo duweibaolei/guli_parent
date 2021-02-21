@@ -1,12 +1,12 @@
 package com.dwl.service_edu.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.dwl.service_edu.entity.EduTeacher;
 import com.dwl.service_edu.entity.vo.TeacherQuery;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -35,4 +35,13 @@ public interface EduTeacherService extends IService<EduTeacher> {
      * @return IPage<EduTeacher>
      */
     IPage<EduTeacher> pageTeacher(long current, long limit, TeacherQuery teacherQuery);
+
+    /**
+     * 前端获取讲师分页列表
+     *
+     * @param current 当前页
+     * @param limit   每页记录数
+     * @return Map<String, Object>
+     */
+    Map<String, Object> pageListWeb(long current, long limit);
 }

@@ -13,7 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -78,4 +80,35 @@ public class EduTeacherServiceImpl extends ServiceImpl<EduTeacherMapper, EduTeac
         }
         return baseMapper.selectPage(new Page<>(current, limit), queryWrapper);
     }
+
+    /**
+     * 前端获取讲师分页列表
+     *
+     * @param current 当前页
+     * @param limit   每页记录数
+     * @return Map<String, Object>
+     */
+    @Override
+    public Map<String, Object> pageListWeb(long current, long limit) {
+        Page<EduTeacher> pageParam = new Page<>(current, limit);
+        QueryWrapper<EduTeacher> wrapper = new QueryWrapper<>();
+        wrapper.orderByDesc("id");
+        //把分页数据封装到pageTeacher对象
+        baseMapper.selectPage(pageParam, wrapper);
+
+        // 把分页数据获取出来，放到map集合
+        Map<String, Object> map = new HashMap<>();
+        map.put("items", pageParam.getRecords());
+        map.put("current", pageParam.getCurrent());
+        map.put("pages", pageParam.getPages());
+        map.put("size", pageParam.getSize());
+        map.put("total", pageParam.getTotal());
+        map.put("hasNext", pageParam.hasNext());
+        map.put("hasPrevious", pageParam.hasPrevious());
+
+        // map返回
+        return map;
+    }
+
+
 }

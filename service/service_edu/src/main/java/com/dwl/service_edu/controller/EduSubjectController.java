@@ -24,7 +24,7 @@ import java.util.List;
  * @author dwl
  * @since 2021-01-13
  */
-@Api("课程分类管理")
+@Api(tags = "课程分类管理")
 @CrossOrigin
 @RestController
 @RequestMapping("/eduService/eduSubject")
