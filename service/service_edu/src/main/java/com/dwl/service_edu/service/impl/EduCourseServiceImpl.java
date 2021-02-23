@@ -15,6 +15,8 @@ import com.dwl.service_edu.entity.EduCourseDescription;
 import com.dwl.service_edu.entity.EduVideo;
 import com.dwl.service_edu.entity.vo.CourseInfoVo;
 import com.dwl.service_edu.entity.vo.CoursePublishVo;
+import com.dwl.service_edu.entity.vo.frontvo.CourseWebVo;
+import com.dwl.service_edu.entity.vo.frontvo.FrontCourseQueryVo;
 import com.dwl.service_edu.mapper.EduCourseMapper;
 import com.dwl.service_edu.service.EduChapterService;
 import com.dwl.service_edu.service.EduCourseDescriptionService;
@@ -290,14 +292,31 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
      *
      * @param current 当前页
      * @param limit   每页记录数
+     * @param queryVo
      * @return Map<String, Object>
      */
     @Override
-    public Map<String, Object> pageListWeb(long current, long limit) {
+    public Map<String, Object> pageListWeb(long current, long limit, FrontCourseQueryVo queryVo) {
         Page<EduCourse> coursePage = new Page<>(current, limit);
-        QueryWrapper<EduCourse> courseQueryWrapper = new QueryWrapper<>();
-        courseQueryWrapper.orderByDesc("view_count");
-        baseMapper.selectPage(coursePage, courseQueryWrapper);
+        QueryWrapper<EduCourse> queryWrapper = new QueryWrapper<>();
+
+        if (StringUtil.isNotEmpty(queryVo.getSubjectParentId())) {
+            queryWrapper.eq("subject_parent_id", queryVo.getSubjectParentId());
+        }
+        if (StringUtil.isNotEmpty(queryVo.getSubjectId())) {
+            queryWrapper.eq("subject_id", queryVo.getSubjectId());
+        }
+        if (StringUtil.isNotEmpty(queryVo.getBuyCountSort())) {
+            queryWrapper.orderByDesc("buy_count");
+        }
+        if (StringUtil.isNotEmpty(queryVo.getGmtCreateSort())) {
+            queryWrapper.orderByDesc("gmt_create");
+        }
+        if (StringUtil.isNotEmpty(queryVo.getPriceSort())) {
+            queryWrapper.orderByDesc("price");
+        }
+
+        baseMapper.selectPage(coursePage, queryWrapper);
 
         // 把分页数据获取出来，放到map集合
         Map<String, Object> map = new HashMap<>();
@@ -311,5 +330,29 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
 
         // map返回
         return map;
+    }
+
+    /**
+     * 根据课程id查询课程信息
+     *
+     * @param courseId
+     * @return
+     */
+    @Override
+    public CourseWebVo getBaseCourseInfo(String courseId) {
+        this.updatePageViewCount(courseId);
+        return baseMapper.selectInfoWebById(courseId);
+    }
+
+    /**
+     * 更新课程浏览数
+     *
+     * @param id
+     */
+    @Override
+    public void updatePageViewCount(String id) {
+        EduCourse course = baseMapper.selectById(id);
+        course.setViewCount(course.getViewCount() + 1);
+        baseMapper.updateById(course);
     }
 }

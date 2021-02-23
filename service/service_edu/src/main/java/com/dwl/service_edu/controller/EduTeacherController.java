@@ -68,7 +68,7 @@ public class EduTeacherController {
      * @return Result
      */
     @ApiOperation(value = "所有讲师列表")
-    @GetMapping("/findAll")
+        @GetMapping("/findAll")
     public Result findAllTeacher(@ApiParam(name = "id", value = "讲师id") String id) {
         QueryWrapper<EduTeacher> wrapper = new QueryWrapper<>();
         if (StringUtil.isNotEmpty(id)) {

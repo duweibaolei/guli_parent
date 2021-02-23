@@ -3,6 +3,7 @@ package com.dwl.service_edu.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.dwl.service_edu.entity.EduCourse;
 import com.dwl.service_edu.entity.vo.CoursePublishVo;
+import com.dwl.service_edu.entity.vo.frontvo.CourseWebVo;
 
 /**
  * <p>
@@ -21,4 +22,13 @@ public interface EduCourseMapper extends BaseMapper<EduCourse> {
      * @return
      */
     CoursePublishVo selectCoursePublishVoById(String courseId);
+
+    /**
+     * 根据课程id查询课程信息
+     *
+     * @param courseId 课程id
+     * @return 课程信息
+     */
+    CourseWebVo selectInfoWebById(String courseId);
+
 }

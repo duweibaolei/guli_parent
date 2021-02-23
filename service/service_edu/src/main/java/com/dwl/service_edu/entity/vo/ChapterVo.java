@@ -28,6 +28,10 @@ public class ChapterVo implements Serializable {
      */
     private Integer isFree;
 
+    /**
+     * 视频id
+     */
+    private String videoSourceId;
 
     @ApiModelProperty(value = "云服务器上存储的视频文件名称")
     private String videoOriginalName;

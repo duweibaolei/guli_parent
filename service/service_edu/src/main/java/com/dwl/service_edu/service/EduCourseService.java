@@ -6,6 +6,8 @@ import com.dwl.service_edu.entity.CourseQuery;
 import com.dwl.service_edu.entity.EduCourse;
 import com.dwl.service_edu.entity.vo.CourseInfoVo;
 import com.dwl.service_edu.entity.vo.CoursePublishVo;
+import com.dwl.service_edu.entity.vo.frontvo.CourseWebVo;
+import com.dwl.service_edu.entity.vo.frontvo.FrontCourseQueryVo;
 
 import java.util.List;
 import java.util.Map;
@@ -87,7 +89,24 @@ public interface EduCourseService extends IService<EduCourse> {
      *
      * @param current 当前页
      * @param limit   每页记录数
+     * @param queryVo
      * @return Map<String, Object>
      */
-    Map<String, Object> pageListWeb(long current, long limit);
+    Map<String, Object> pageListWeb(long current, long limit, FrontCourseQueryVo queryVo);
+
+    /**
+     * 根据课程id查询课程信息
+     *
+     * @param courseId
+     * @return
+     */
+    CourseWebVo getBaseCourseInfo(String courseId);
+
+    /**
+     * 更新课程浏览数
+     *
+     * @param id
+     */
+    void updatePageViewCount(String id);
+
 }

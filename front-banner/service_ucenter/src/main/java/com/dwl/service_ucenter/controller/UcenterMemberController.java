@@ -6,6 +6,7 @@ import com.dwl.common_utils.util.BeanUtil;
 import com.dwl.common_utils.util.JwtUtil;
 import com.dwl.common_utils.util.StringUtil;
 import com.dwl.service_base.util.RedisUtils;
+import com.dwl.service_ucenter.entity.UcenterMember;
 import com.dwl.service_ucenter.entity.vo.LoginInfoVo;
 import com.dwl.service_ucenter.entity.vo.LoginVo;
 import com.dwl.service_ucenter.entity.vo.RegisterVo;
@@ -15,6 +16,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -115,6 +117,38 @@ public class UcenterMemberController {
             LOGGER.error("获取登录信息异常，异常信息：[{}]", e + "");
             return Result.error().message("获取登录信息异常：" + e);
         }
+    }
+
+    /**
+     * 根据token获取用户信息
+     *
+     * @param request
+     * @return
+     */
+    @ApiOperation("根据token获取用户信息")
+    @GetMapping("getMemberInfo")
+    public Result getMemberInfo(HttpServletRequest request) {
+        // 调用jwt工具类的方法。根据request对象获取头信息，返回用户id
+        String memberId = JwtUtil.getMemberIdByJwtToken(request);
+        //查询数据库根据用户id获取用户信息
+        UcenterMember member = memberService.getById(memberId);
+        return Result.ok().data("userInfo", member);
+    }
+
+    /**
+     * 根据用户id获取用户信息
+     *
+     * @param id
+     * @return
+     */
+    @ApiOperation("根据用户id获取用户信息")
+    @PostMapping("getUserInfoOrder/{id}")
+    public UcenterMember getUserInfoOrder(@PathVariable String id) {
+        UcenterMember member = memberService.getById(id);
+        // 把member对象里面值复制给UcenterMemberOrder对象
+        UcenterMember ucenterMember = new UcenterMember();
+        BeanUtils.copyProperties(member, ucenterMember);
+        return ucenterMember;
     }
 
 }

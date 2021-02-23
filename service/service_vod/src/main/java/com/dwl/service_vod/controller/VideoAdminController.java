@@ -1,9 +1,16 @@
 package com.dwl.service_vod.controller;
 
 
+import com.aliyuncs.DefaultAcsClient;
+import com.aliyuncs.vod.model.v20170321.GetVideoPlayAuthRequest;
+import com.aliyuncs.vod.model.v20170321.GetVideoPlayAuthResponse;
 import com.dwl.common_utils.Result.Result;
+import com.dwl.common_utils.Result.ResultCode;
+import com.dwl.service_base.exception_handler.GuLiException;
 import com.dwl.service_base.util.RedisUtils;
 import com.dwl.service_vod.service.VideoService;
+import com.dwl.service_vod.vodUtil.AliyunVodSDKUtils;
+import com.dwl.service_vod.vodUtil.ConstantPropertiesUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -99,4 +106,29 @@ public class VideoAdminController {
         Integer progressData = (Integer) redisUtils.get("progressData");
         return Result.ok().data("progressData", progressData);
     }
+
+    /**
+     * 根据视频id获取视频凭证
+     */
+    @GetMapping("getPlayAuth/{id}")
+    public Result getPlayAuth(
+            @ApiParam(name = "id", value = "视频id", required = true)
+            @PathVariable String id) {
+        try {
+            // 创建初始化对象
+            DefaultAcsClient client =
+                    AliyunVodSDKUtils.initVodClient(ConstantPropertiesUtil.KEY_ID, ConstantPropertiesUtil.KEY_SECRET);
+            // 创建获取凭证request和response对象
+            GetVideoPlayAuthRequest request = new GetVideoPlayAuthRequest();
+            // 向request设置视频id
+            request.setVideoId(id);
+            // 调用方法得到凭证
+            GetVideoPlayAuthResponse response = client.getAcsResponse(request);
+            String playAuth = response.getPlayAuth();
+            return Result.ok().data("playAuth", playAuth);
+        } catch (Exception e) {
+            throw new GuLiException(ResultCode.ERROR.getStatus(), "获取凭证失败");
+        }
+    }
+
 }

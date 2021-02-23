@@ -3,6 +3,7 @@ package com.dwl.service_edu.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.dwl.service_edu.entity.EduChapter;
 import com.dwl.service_edu.entity.vo.ChapterNestedVo;
+import com.dwl.service_edu.entity.vo.ChapterVo;
 
 import java.util.List;
 
