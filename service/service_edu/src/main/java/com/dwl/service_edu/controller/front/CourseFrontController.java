@@ -1,6 +1,7 @@
 package com.dwl.service_edu.controller.front;
 
 import com.dwl.common_utils.Result.Result;
+import com.dwl.common_utils.ordervo.CourseWebVoOrder;
 import com.dwl.service_edu.entity.vo.ChapterNestedVo;
 import com.dwl.service_edu.entity.vo.frontvo.CourseWebVo;
 import com.dwl.service_edu.entity.vo.frontvo.FrontCourseQueryVo;
@@ -9,6 +10,7 @@ import com.dwl.service_edu.service.EduCourseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,5 +72,22 @@ public class CourseFrontController {
         // 根据课程id查询章节和小节
         List<ChapterNestedVo> chapterVideoList = chapterService.nestedChapterList(courseId);
         return Result.ok().data("courseWebVo", courseWebVo).data("chapterVideoList", chapterVideoList);
+    }
+
+    /**
+     * 根据课程id查询课程信息
+     *
+     * @param id
+     * @return
+     */
+    @ApiOperation(value = "根据课程id查询课程信息")
+    @PostMapping("getCourseInfoOrder/{id}")
+    public CourseWebVoOrder getCourseInfoOrder(
+            @ApiParam(name = "id", value = "课程id", required = true)
+            @PathVariable String id) {
+        CourseWebVo courseInfo = eduCourseService.getBaseCourseInfo(id);
+        CourseWebVoOrder courseWebVoOrder = new CourseWebVoOrder();
+        BeanUtils.copyProperties(courseInfo, courseWebVoOrder);
+        return courseWebVoOrder;
     }
 }

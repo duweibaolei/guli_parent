@@ -2,6 +2,7 @@ package com.dwl.service_ucenter.controller;
 
 
 import com.dwl.common_utils.Result.Result;
+import com.dwl.common_utils.ordervo.UcenterMemberOrder;
 import com.dwl.common_utils.util.BeanUtil;
 import com.dwl.common_utils.util.JwtUtil;
 import com.dwl.common_utils.util.StringUtil;
@@ -143,10 +144,10 @@ public class UcenterMemberController {
      */
     @ApiOperation("根据用户id获取用户信息")
     @PostMapping("getUserInfoOrder/{id}")
-    public UcenterMember getUserInfoOrder(@PathVariable String id) {
+    public UcenterMemberOrder getUserInfoOrder(@PathVariable String id) {
         UcenterMember member = memberService.getById(id);
         // 把member对象里面值复制给UcenterMemberOrder对象
-        UcenterMember ucenterMember = new UcenterMember();
+        UcenterMemberOrder ucenterMember = new UcenterMemberOrder();
         BeanUtils.copyProperties(member, ucenterMember);
         return ucenterMember;
     }
