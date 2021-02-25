@@ -58,15 +58,15 @@ public class PayLogServiceImpl extends ServiceImpl<PayLogMapper, PayLog> impleme
 
             // 2.使用map设置生成二维码需要参数
             Map<String, String> m = new HashMap<>();
-            m.put("appid", WX.APP_ID.getStr());
-            m.put("mch_id", WX.MCH_ID.getStr());
+            m.put("appid", WX.APP_ID.getStr());  // 商家平台ID
+            m.put("mch_id", WX.MCH_ID.getStr()); // 商户ID
             m.put("nonce_str", WXPayUtil.generateNonceStr());
             m.put("body", order.getCourseTitle()); // 课程标题
             m.put("out_trade_no", orderNo); // 订单号
-            m.put("total_fee", order.getTotalFee().multiply(new BigDecimal("100")).longValue() + "");
-            m.put("spbill_create_ip", "127.0.0.1");
-            m.put("notify_url", WX.NOTIFY_URL.getStr() + "\n");
-            m.put("trade_type", "NATIVE");
+            m.put("total_fee", order.getTotalFee().multiply(new BigDecimal("100")).longValue() + ""); // 支付金额，单位分
+            m.put("spbill_create_ip", "127.0.0.1"); // 终端IP
+            m.put("notify_url", WX.NOTIFY_URL.getStr() + "\n"); // 此路径是微信服务器调用支付结果通知路径随意写
+            m.put("trade_type", "NATIVE");  // 支付类型
 
             // 3.发送httpclient请求，传递参数xml格式，微信支付提供的固定的地址
             HttpClient client = new HttpClient(WX.PAY_CLIENT.getStr());
@@ -76,7 +76,7 @@ public class PayLogServiceImpl extends ServiceImpl<PayLogMapper, PayLog> impleme
             // 执行post请求发送
             client.post();
 
-            /* 4 得到发送请求返回结果
+            /* 4.得到发送请求返回结果
                返回内容，是使用xml格式返回 */
             String xml = client.getContent();
 
@@ -85,12 +85,12 @@ public class PayLogServiceImpl extends ServiceImpl<PayLogMapper, PayLog> impleme
 
             // 最终返回数据 的封装
             Map<String, Object> map = new HashMap<>();
-            map.put("out_trade_no", orderNo);
+            map.put("out_trade_no", orderNo); // 商户订单号 必传
             map.put("course_id", order.getCourseId());
-            map.put("total_fee", order.getTotalFee());
-            map.put("result_code", resultMap.get("result_code"));  // 返回二维码操作状态码
-            map.put("code_url", resultMap.get("code_url"));        // 二维码地址
-
+            map.put("total_fee", order.getTotalFee()); // 支付金额，单位分 必传
+            map.put("result_code", resultMap.get("result_code"));  // 返回二维码操作状态码 必传
+            map.put("code_url", resultMap.get("code_url"));        // 二维码地址 必传
+            // 返回
             return map;
         } catch (Exception e) {
             throw new GuLiException(ResultCode.ERROR.getStatus(), e + "");
