@@ -13,12 +13,12 @@ import com.dwl.service_order.entity.Order;
  */
 public interface OrderService extends IService<Order> {
 
-//    /**
-//     * 创建订单
-//     *
-//     * @param courseId
-//     * @param memberIdByJwtToken
-//     * @return
-//     */
-//    String createOrders(String courseId, String memberIdByJwtToken);
+    /**
+     * 创建订单
+     *
+     * @param courseId
+     * @param memberIdByJwtToken
+     * @return
+     */
+    String createOrders(String courseId, String memberIdByJwtToken);
 }

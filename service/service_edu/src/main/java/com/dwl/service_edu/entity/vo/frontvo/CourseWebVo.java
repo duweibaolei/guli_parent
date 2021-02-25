@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 @ApiModel(value = "课程信息", description = "网站课程详情页需要的相关字段")
 @Data
 public class CourseWebVo {
+
     private String id;
 
     @ApiModelProperty(value = "课程标题")
@@ -55,4 +56,5 @@ public class CourseWebVo {
 
     @ApiModelProperty(value = "类别二级名称")
     private String subjectLevelTwo;
+
 }

@@ -14,7 +14,8 @@ public enum ResultCode {
     DELETED_ERROR(50005), // 删除异常
     MESSAGES_ERROR(50006), // 发送短信异常
     NULL_ERROR(50007); // 空异常
-    private Integer status;
+
+    private final Integer status;
 
     ResultCode(Integer status) {
         this.status = status;
@@ -24,7 +25,4 @@ public enum ResultCode {
         return status;
     }
 
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
 }

@@ -16,6 +16,6 @@ public interface EduClient {
      * @param id 课程id
      * @return CourseWebVoOrder
      */
-    @PostMapping("/eduService/front/commentFront/getCourseInfoOrder/{id}")
+    @PostMapping("/eduService/front/courseFront/getCourseInfoOrder/{id}")
     CourseWebVoOrder getCourseInfoOrder(@PathVariable("id") String id);
 }
