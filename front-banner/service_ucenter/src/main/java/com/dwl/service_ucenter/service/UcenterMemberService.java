@@ -49,4 +49,12 @@ public interface UcenterMemberService extends IService<UcenterMember> {
      * @return UcenterMember
      */
     UcenterMember saveUcEnterMember(String openid, HashMap userInfoMap);
+
+    /**
+     * 查询某一天注册人数
+     *
+     * @param day
+     * @return
+     */
+    Integer countRegisterDay(String day);
 }

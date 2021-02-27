@@ -127,7 +127,7 @@ public class UcenterMemberController {
      * @return
      */
     @ApiOperation("根据token获取用户信息")
-    @GetMapping("getMemberInfo")
+    @GetMapping("/getMemberInfo")
     public Result getMemberInfo(HttpServletRequest request) {
         // 调用jwt工具类的方法。根据request对象获取头信息，返回用户id
         String memberId = JwtUtil.getMemberIdByJwtToken(request);
@@ -143,13 +143,27 @@ public class UcenterMemberController {
      * @return
      */
     @ApiOperation("根据用户id获取用户信息")
-    @PostMapping("getUserInfoOrder/{id}")
+    @PostMapping("/getUserInfoOrder/{id}")
     public UcenterMemberOrder getUserInfoOrder(@PathVariable String id) {
         UcenterMember member = memberService.getById(id);
         // 把member对象里面值复制给UcenterMemberOrder对象
         UcenterMemberOrder ucenterMember = new UcenterMemberOrder();
         BeanUtils.copyProperties(member, ucenterMember);
         return ucenterMember;
+    }
+
+    /**
+     * 查询某一天注册人数
+     *
+     * @param day
+     * @return
+     */
+    @ApiOperation(value = "查询某一天注册人数")
+    @GetMapping("/countRegister/{day}")
+    public Result countRegister(
+            @ApiParam(name = "day", value = "天", required = true) @PathVariable String day) {
+        Integer count = memberService.countRegisterDay(day);
+        return Result.ok().data("countRegister", count);
     }
 
 }

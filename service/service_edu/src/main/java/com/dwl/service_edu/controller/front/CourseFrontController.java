@@ -2,6 +2,9 @@ package com.dwl.service_edu.controller.front;
 
 import com.dwl.common_utils.Result.Result;
 import com.dwl.common_utils.ordervo.CourseWebVoOrder;
+import com.dwl.common_utils.util.JwtUtil;
+import com.dwl.common_utils.util.StringUtil;
+import com.dwl.service_edu.client.OrdersClient;
 import com.dwl.service_edu.entity.vo.ChapterNestedVo;
 import com.dwl.service_edu.entity.vo.frontvo.CourseWebVo;
 import com.dwl.service_edu.entity.vo.frontvo.FrontCourseQueryVo;
@@ -14,6 +17,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -33,13 +37,16 @@ public class CourseFrontController {
      */
     private EduChapterService chapterService;
 
+    private OrdersClient ordersClient;
+
     public CourseFrontController() {
     }
 
     @Autowired
-    public CourseFrontController(EduCourseService eduCourseService, EduChapterService chapterService) {
+    public CourseFrontController(EduCourseService eduCourseService, EduChapterService chapterService, OrdersClient ordersClient) {
         this.eduCourseService = eduCourseService;
         this.chapterService = chapterService;
+        this.ordersClient = ordersClient;
     }
 
     /**
@@ -66,12 +73,18 @@ public class CourseFrontController {
      */
     @ApiOperation(value = "课程详情的方法")
     @GetMapping("getFrontCourseInfo/{courseId}")
-    public Result getFrontCourseInfo(@PathVariable String courseId) {
+    public Result getFrontCourseInfo(@PathVariable String courseId, HttpServletRequest request) {
         // 根据课程id，编写sql语句查询课程信息
         CourseWebVo courseWebVo = eduCourseService.getBaseCourseInfo(courseId);
         // 根据课程id查询章节和小节
         List<ChapterNestedVo> chapterVideoList = chapterService.nestedChapterList(courseId);
-        return Result.ok().data("courseWebVo", courseWebVo).data("chapterVideoList", chapterVideoList);
+        // 根据课程id和用户id查询当前课程是否已经支付过了
+        String memberId = JwtUtil.getMemberIdByJwtToken(request);
+        boolean buyCourse = false;
+        if (StringUtil.isNotEmpty(memberId)) {
+            buyCourse = ordersClient.isBuyCourse(courseId, JwtUtil.getMemberIdByJwtToken(request));
+        }
+        return Result.ok().data("courseWebVo", courseWebVo).data("chapterVideoList", chapterVideoList).data("isBuy", buyCourse);
     }
 
     /**

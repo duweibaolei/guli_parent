@@ -6,6 +6,7 @@
         <module>common</module>
         <module>service</module>
         <module>front-banner</module>
+        <module>canal_clientedu</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

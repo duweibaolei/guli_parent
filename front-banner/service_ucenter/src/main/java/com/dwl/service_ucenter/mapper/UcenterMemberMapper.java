@@ -1,7 +1,7 @@
 package com.dwl.service_ucenter.mapper;
 
-import com.dwl.service_ucenter.entity.UcenterMember;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.dwl.service_ucenter.entity.UcenterMember;
 
 /**
  * <p>
@@ -13,4 +13,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface UcenterMemberMapper extends BaseMapper<UcenterMember> {
 
+    /**
+     * 查询某一天注册人数
+     *
+     * @param day
+     * @return
+     */
+    Integer countRegisterDay(String day);
 }
