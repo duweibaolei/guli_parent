@@ -16,7 +16,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/cms/index")
-@CrossOrigin
 public class IndexController {
     /**
      * 日志服务

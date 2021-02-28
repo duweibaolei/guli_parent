@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/eduService/eduVideo")
 @Api(tags = "课时管理")
-@CrossOrigin //跨域
 public class EduVideoController {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(EduVideoController.class);

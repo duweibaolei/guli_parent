@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 
 @Api("阿里云视频点播微服务")
-@CrossOrigin //跨域
+ //跨域
 @RestController
 @RequestMapping("vod/video")
 public class VideoAdminController {

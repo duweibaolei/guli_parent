@@ -18,7 +18,6 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/msmService/msmApi")
-@CrossOrigin //跨域
 @Api("短信接口")
 public class MsmApiController {
 

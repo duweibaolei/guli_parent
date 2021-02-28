@@ -4,7 +4,6 @@ import com.dwl.common_utils.Result.Result;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin // 解决跨域
 @RequestMapping("/eduService/user")
 public class EduLoginController {
 

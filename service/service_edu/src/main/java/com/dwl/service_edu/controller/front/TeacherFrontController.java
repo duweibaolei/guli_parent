@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 @Api(tags = "讲师管理")
-@CrossOrigin // 跨域
 @RestController
 @RequestMapping("/eduService/front/teacherFront")
 public class TeacherFrontController {

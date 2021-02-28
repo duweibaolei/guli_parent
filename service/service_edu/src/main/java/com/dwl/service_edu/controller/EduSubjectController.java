@@ -25,7 +25,6 @@ import java.util.List;
  * @since 2021-01-13
  */
 @Api(tags = "课程分类管理")
-@CrossOrigin
 @RestController
 @RequestMapping("/eduService/eduSubject")
 public class EduSubjectController {

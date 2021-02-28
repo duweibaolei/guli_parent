@@ -20,7 +20,6 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/orderService/payLog")
-@CrossOrigin
 public class PayLogController {
 
     private PayLogService payLogService;

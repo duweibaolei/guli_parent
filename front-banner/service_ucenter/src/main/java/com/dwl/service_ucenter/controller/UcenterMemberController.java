@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @RequestMapping("/serviceUcEnter/ucEnterMember")
-@CrossOrigin
 @Api("会员表 前端控制器")
 public class UcenterMemberController {
 

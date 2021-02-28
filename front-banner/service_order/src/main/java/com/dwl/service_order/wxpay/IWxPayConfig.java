@@ -14,7 +14,7 @@ import java.io.InputStream;
 @Service
 public class IWxPayConfig extends WXPayConfig {
 
-    private byte[] certData;
+    private final byte[] certData;
 
     private String app_id;
 

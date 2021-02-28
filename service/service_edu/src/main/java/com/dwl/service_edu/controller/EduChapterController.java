@@ -25,7 +25,6 @@ import java.util.List;
  */
 @RestController
 @Api(tags = "章节管理")
-@CrossOrigin
 @RequestMapping("/eduService/eduChapter")
 public class EduChapterController {
 

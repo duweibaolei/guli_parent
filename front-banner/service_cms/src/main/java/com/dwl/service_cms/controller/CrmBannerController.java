@@ -26,7 +26,6 @@ import java.util.List;
  */
 @RestController
 @Api("网站首页广告列表")
-@CrossOrigin // 跨域
 @RequestMapping("/cms/crmBanner")
 public class CrmBannerController {
 

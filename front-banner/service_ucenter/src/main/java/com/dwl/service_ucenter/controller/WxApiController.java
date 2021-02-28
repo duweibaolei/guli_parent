@@ -21,7 +21,6 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-@CrossOrigin
 @Controller // @RestController会返回数据，而现在只是请求数据，使用@Controller就可以了。
 @RequestMapping("/api/ucenter/wx")
 public class WxApiController {
