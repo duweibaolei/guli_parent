@@ -21,9 +21,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.DecimalFormat;
 
 @Api("阿里云视频点播微服务")
- //跨域
+//跨域
 @RestController
 @RequestMapping("vod/video")
 public class VideoAdminController {

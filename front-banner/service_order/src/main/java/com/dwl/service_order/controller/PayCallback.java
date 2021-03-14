@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +18,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
 
+@RequestMapping("/orderService/payCallback")
+@RestController
 public class PayCallback {
 
     private IWxPayConfig iWxPayConfig;
@@ -30,7 +34,7 @@ public class PayCallback {
     public PayCallback() {
     }
 
-    @PostMapping
+    @PostMapping("/payCallback")
     public String payCallback(HttpServletRequest request, HttpServletResponse response) {
         logger.info("进入微信支付异步通知");
         String resXml = "";

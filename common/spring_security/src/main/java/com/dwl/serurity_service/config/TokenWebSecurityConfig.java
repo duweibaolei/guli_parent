@@ -19,7 +19,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
  * <p>
- * Security配置类
+ * Spring Security 的核心配置就是继承 WebSecurityConfigurerAdapter 并注解 @EnableWebSecurity 的配置
+ * 这个配置指明了用户名密码的处理方式、请求路WebAsyncManager径、登录
+ * 登出控制等和安全相关的配置
  * </p>
  *
  * @author qy
@@ -29,10 +31,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class TokenWebSecurityConfig extends WebSecurityConfigurerAdapter {
-
+    // 自定义查询数据库用户名密码和权限信息
     private UserDetailsService userDetailsService;
+    // token 管理工具类（生成 token）
     private TokenManager tokenManager;
+    // 密码管理工具类
     private DefaultPasswordEncoder defaultPasswordEncoder;
+    // redis 操作工具类
     private RedisTemplate redisTemplate;
 
     @Autowired
@@ -49,19 +54,28 @@ public class TokenWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * 配置设置
+     * 设置退出的地址和 token，redis 操作地址
      *
      * @param http
      * @throws Exception
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        // 允许配置异常处理 这在使用时自动应用
         http.exceptionHandling()
                 .authenticationEntryPoint(new UnauthorizedEntryPoint())
-                .and().csrf().disable()
+                .and()
+                // 关闭 csrf
+                .csrf().disable()
                 .authorizeRequests()
-                .anyRequest().authenticated()
+                .anyRequest()
+                // 需要认证
+                .authenticated()
+                // 配置默认的退出路径
                 .and().logout().logoutUrl("/admin/acl/index/logout")
+                // 配置登出接口
                 .addLogoutHandler(new TokenLogoutHandler(tokenManager, redisTemplate)).and()
+                // 配置自定义拦截器
                 .addFilter(new TokenLoginFilter(authenticationManager(), tokenManager, redisTemplate))
                 .addFilter(new TokenAuthenticationFilter(authenticationManager(), tokenManager, redisTemplate)).httpBasic();
     }

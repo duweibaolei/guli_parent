@@ -17,6 +17,7 @@ import java.util.List;
 /**
  * <p>
  * 自定义userDetailsService - 认证用户详情
+ * 自定义查询数据库用户名密码和权限信息
  * </p>
  *
  * @author qy
@@ -25,11 +26,18 @@ import java.util.List;
 @Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    @Autowired
     private UserService userService;
 
-    @Autowired
     private PermissionService permissionService;
+
+    @Autowired
+    public UserDetailsServiceImpl(UserService userService, PermissionService permissionService) {
+        this.userService = userService;
+        this.permissionService = permissionService;
+    }
+
+    public UserDetailsServiceImpl() {
+    }
 
     /***
      * 根据账号获取用户信息

@@ -1,6 +1,5 @@
 package com.dwl.service_order.wxpay;
 
-import lombok.Data;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;

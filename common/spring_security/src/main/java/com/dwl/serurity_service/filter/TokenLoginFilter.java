@@ -67,12 +67,10 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
      * @param res
      * @param chain
      * @param auth
-     * @throws IOException
-     * @throws ServletException
      */
     @Override
     protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain,
-                                            Authentication auth) throws IOException, ServletException {
+                                            Authentication auth) {
         SecurityUser user = (SecurityUser) auth.getPrincipal();
         String token = tokenManager.createToken(user.getCurrentUserInfo().getUsername());
         redisTemplate.opsForValue().set(user.getCurrentUserInfo().getUsername(), user.getPermissionValueList());
